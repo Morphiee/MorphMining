@@ -1,0 +1,11 @@
+name: MorphMining
+author: Morphie
+version: 1.2.5
+main: me.morphie.MorphMining.Main
+depend: [Vault]
+softdepend: [WorldGuard, GriefPrevention]
+
+commands:
+   mine:
+      description: Shows the base commands for mining.
+      usage: /<command>

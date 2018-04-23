@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/rtmb2/Downloads/spigot-1.12.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rtmb2/Downloads/Vault.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rtmb2/Downloads/GriefPrevention.jar"/>
+	<classpathentry kind="lib" path="C:/Users/rtmb2/Downloads/worldguard-6.2.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,53 @@
+#    _____                          .__        _____   .__         .__                 
+#   /     \    ____ _______ ______  |  |__    /     \  |__|  ____  |__|  ____    ____  
+#  /  \ /  \  /  _ \\_  __ \\____ \ |  |  \  /  \ /  \ |  | /    \ |  | /    \  / ___\ 
+# /    Y    \(  <_> )|  | \/|  |_> >|   Y  \/    Y    \|  ||   |  \|  ||   |  \/ /_/  >
+# \____|__  / \____/ |__|   |   __/ |___|  /\____|__  /|__||___|  /|__||___|  /\___  / 
+#         \/                |__|         \/         \/          \/          \//_____/  
+
+
+# Change the price of artifacts here!
+ArtifactPrice:
+  Common: 50.00
+  Rare: 250.00
+  Legendary: 750.00
+  Mythic: 2500.00
+
+# Change the crate open price here!
+CrateOpenCost:
+  PileOfRocks: 10.00
+  IronedOut: 20.00
+  MinersDream: 30.00
+
+# Got a neat idea for an artifact? Create your own here!
+# Keep in mind the desction will only set 1 line of the lore.
+# Color codes supported!
+Artifacts:
+  Common:
+    1:
+      Name: '&c&lMercys Wrath'
+      Description: '&7&oI need healing!'
+    2:
+      Name: '&c&lTest'
+      Description: '&7&oI need healing!'
+  Rare:
+    1:
+      Name: '&c&lArk of Strength'
+      Description: '&7How tough are ya?'
+    2:
+      Name: '&c&lRare Test'
+      Description: '&7&oI need healing!'
+  Legendary:
+    1:
+      Name: '&c&lEchos Fortune'
+      Description: '&7&oCan you hear me now?'
+    2:
+      Name: '&c&lLegend Test'
+      Description: '&7&oI need healing!'
+  Mythic:
+    1:
+      Name: '&c&lTorments Serenity'
+      Description: '&7&oAre you crying?'
+    2:
+      Name: '&c&lMythic Test'
+      Description: '&7&oI need healing!'
