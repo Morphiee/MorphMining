@@ -15,11 +15,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Station;
-import me.morphie.MorphMining.Crates.CratesMenu;
-import me.morphie.MorphMining.MineLog.LogMenu;
 
 
 public class Archivist implements Listener {
+	
 	private Main plugin;
 	  
 	public Archivist(Main plugin) {
@@ -38,13 +37,31 @@ public class Archivist implements Listener {
 		      case END_CRYSTAL:
 		    	  event.setCancelled(true);
 		    	  break;
-		      case PISTON_BASE:
+		      case STRUCTURE_VOID:
+		    	  event.setCancelled(true);
+		    	  break;
+		      case ENDER_EYE:
+		    	  event.setCancelled(true);
+		    	  break;
+		      case REDSTONE_BLOCK:
+		    	  event.setCancelled(true);
+		    	  break;
+		      case DIAMOND_BLOCK:
+		    	  event.setCancelled(true);
+		    	  break;
+		      case BONE:
+		    	  event.setCancelled(true);
+		    	  break;
+		      case ANVIL:
+		    	  event.setCancelled(true);
+		    	  break;
+		      case DIAMOND_ORE:
 		    	  player.closeInventory();
-		    	  new CratesMenu(this.plugin).openGUICrate(player);
+		    	  new OreGrinderMenu(this.plugin).openGUIOG(player);
 		    	  break;
 		      case BOOK:
 		    	  break;
-		      case ARROW:
+		      case REDSTONE:
 		    	  player.closeInventory();
 		    	  new Station(this.plugin).openGUIMining(player);
 		    	  break;
@@ -56,82 +73,83 @@ public class Archivist implements Listener {
 	}
 	
 	public void openGUIArch(Player player) {
-		Inventory Arch = Bukkit.createInventory(null, 54, ChatColor.DARK_RED + "" + ChatColor.BOLD + "Archivist");
+		Inventory Arch = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Archivist"));
 		
-		ItemStack Relic = new ItemStack(Material.END_CRYSTAL);
-		ItemMeta RelicMeta = Relic.getItemMeta();
-		ArrayList<String> Reliclore = new ArrayList();
-		Reliclore.add(" ");
-		Reliclore.add(ChatColor.GRAY + "Give the archivist");
-		Reliclore.add(ChatColor.GRAY + "unidentified relics here!");
-		Reliclore.add(" ");
-		Reliclore.add(ChatColor.DARK_RED + "" + ChatColor.ITALIC + "Coming Soon!");
-		RelicMeta.setLore(Reliclore);
+		ItemStack Coming = new ItemStack(Material.STRUCTURE_VOID);
+		ItemMeta ComingMeta = Coming.getItemMeta();
+		ComingMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Coming Soon!"));
+		Coming.setItemMeta(ComingMeta);
+
+		ItemStack Buy = new ItemStack(Material.ENDER_EYE);
+		ItemMeta BuyMeta = Buy.getItemMeta();
+		BuyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Analyzers"));
+		Buy.setItemMeta(BuyMeta);
 		
-	    RelicMeta.setDisplayName(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Relic Analyzer");
-	    Relic.setItemMeta(RelicMeta);
-	    Arch.setItem(20, Relic);
+		ItemStack Sell = new ItemStack(Material.REDSTONE_BLOCK);
+		ItemMeta SellMeta = Sell.getItemMeta();
+		SellMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Planned Updates"));
+		Sell.setItemMeta(SellMeta);
+		
+		ItemStack Ore = new ItemStack(Material.DIAMOND_ORE);
+		ItemMeta OreMeta = Ore.getItemMeta();
+		ArrayList<String> Orelore = new ArrayList();
+		Orelore.add(ChatColor.GRAY + "Grind your ores for a");
+		Orelore.add(ChatColor.GRAY + "chance to get gems!");
+		OreMeta.setLore(Orelore);
+		OreMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Ore Grinder"));
+		Ore.setItemMeta(OreMeta);
 	    
-		ItemStack Crate = new ItemStack(Material.PISTON_BASE);
-		ItemMeta CrateMeta = Crate.getItemMeta();
-		ArrayList<String> Cratelore = new ArrayList();
-		Cratelore.add("");
-		Cratelore.add(ChatColor.GRAY + "Give the archivist");
-		Cratelore.add(ChatColor.GRAY + "unopened crates here!");
-		CrateMeta.setLore(Cratelore);
-		
-		CrateMeta.setDisplayName(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Crate Analyzer");
-		Crate.setItemMeta(CrateMeta);
-		Arch.setItem(24, Crate);
-		
+	    ItemStack Art = new ItemStack(Material.END_CRYSTAL);
+	    ItemMeta ArtMeta = Art.getItemMeta();
+	    ArrayList<String> Artlore = new ArrayList();
+	    Artlore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    ArtMeta.setLore(Artlore);
+	    ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Relic Analyzer"));
+	    Art.setItemMeta(ArtMeta);
+	    
+	    ItemStack Fos = new ItemStack(Material.BONE);
+	    ItemMeta FosMeta = Fos.getItemMeta();
+	    ArrayList<String> Foslore = new ArrayList();
+	    Foslore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    FosMeta.setLore(Foslore);
+	    FosMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Fossil Analyzer"));
+	    Fos.setItemMeta(FosMeta);
+	    
+	    ItemStack Forge = new ItemStack(Material.ANVIL);
+	    ItemMeta ForgeMeta = Forge.getItemMeta();
+	    ArrayList<String> Forgelore = new ArrayList();
+	    Forgelore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    ForgeMeta.setLore(Forgelore);
+	    ForgeMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Miner's Forge"));
+	    Forge.setItemMeta(ForgeMeta);
+	    
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "The archivist identifies relics");
-		Infolore.add(ChatColor.GRAY + "and opens crates!");
+		Infolore.add(ChatColor.GRAY + "Click on a shop to view more!");
 		InfoMeta.setLore(Infolore);
-		
-		InfoMeta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Information");
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
 		Info.setItemMeta(InfoMeta);
-		Arch.setItem(48, Info);
 		
-		ItemStack Back = new ItemStack(Material.ARROW);
+		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
 	    Backlore.add(ChatColor.GRAY + "Click to go back!");
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.RED + "" + ChatColor.BOLD + "Back");
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back" + "&8:"));
 	    Back.setItemMeta(BackMeta);
-	    Arch.setItem(50, Back);
 	    
-	    ItemStack redGlass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)14);
-	    ItemMeta redGlassMeta = redGlass.getItemMeta();
-	    ArrayList<String> redGlasslore = new ArrayList();
-	    redGlasslore.add(" ");
-	    
-	    redGlassMeta.setDisplayName(" ");
-	    redGlass.setItemMeta(redGlassMeta);
-	    Arch.setItem(10, redGlass);
-	    Arch.setItem(11, redGlass);
-	    Arch.setItem(12, redGlass);
-	    Arch.setItem(14, redGlass);
-	    Arch.setItem(15, redGlass);
-	    Arch.setItem(16, redGlass);
-	    Arch.setItem(19, redGlass);
-	    Arch.setItem(21, redGlass);
-	    Arch.setItem(23, redGlass);
-	    Arch.setItem(25, redGlass);
-	    Arch.setItem(28, redGlass);
-	    Arch.setItem(29, redGlass);
-	    Arch.setItem(30, redGlass);
-	    Arch.setItem(32, redGlass);
-	    Arch.setItem(33, redGlass);
-	    Arch.setItem(34, redGlass);
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemMeta bGlassMeta = bGlass.getItemMeta();
+	    ArrayList<String> bGlasslore = new ArrayList();
+	    bGlasslore.add(" ");
+	    bGlassMeta.setDisplayName(" ");
+	    bGlass.setItemMeta(bGlassMeta);
 	    
 	    int glass = 0;
 	    while (glass < 54) {
-	    	if (((glass < 10) || (glass >= 13)) && ((glass < 14) || (glass >= 17)) && ((glass < 19) || (glass >= 22)) && ((glass < 23) || (glass >= 26)) && ((glass < 28) || (glass >= 31)) && ((glass < 32) || (glass >= 35)) && (glass != 48) && (glass != 50)) {
-	            ItemStack Glass = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)15);
+	    	if ((glass != 9) && (glass != 10) && (glass != 11) && (glass != 12) && (glass != 13) && (glass != 14)  && (glass != 15) && (glass != 16) && (glass != 17) && (glass != 18) && (glass != 20) && (glass != 26) && (glass != 27) && (glass != 28) && (glass != 29) && (glass != 30) && (glass != 31) && (glass != 32) && (glass != 33) && (glass != 34) && (glass != 35) && (glass != 48) && (glass != 50)) {
+	            ItemStack Glass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, (short)15);
 	            ItemMeta GlassMeta = Glass.getItemMeta();
 	            GlassMeta.setDisplayName(" ");
 	            Glass.setItemMeta(GlassMeta);
@@ -139,6 +157,58 @@ public class Archivist implements Listener {
 	    	}
 	    	glass ++;
 	    }
+	    
+	    Arch.setItem(9, bGlass);
+	    Arch.setItem(10, Buy);
+	    Arch.setItem(11, bGlass);
+	    Arch.setItem(12, Ore);
+	    Arch.setItem(13, Coming);
+	    Arch.setItem(14, Coming);
+	    Arch.setItem(15, Coming);
+	    Arch.setItem(16, Coming);
+	    Arch.setItem(17, bGlass);
+	    Arch.setItem(18, bGlass);
+	    Arch.setItem(20, bGlass);
+	    Arch.setItem(26, bGlass);
+	    Arch.setItem(27, bGlass);
+	    Arch.setItem(28, Sell);
+	    Arch.setItem(29, bGlass);
+	    Arch.setItem(30, Art);
+	    Arch.setItem(31, Fos);
+	    Arch.setItem(32, Forge);
+	    Arch.setItem(33, Coming);
+	    Arch.setItem(34, Coming);
+	    Arch.setItem(35, bGlass);
+	    Arch.setItem(48, Back);
+	    Arch.setItem(50, Info);
 	    player.openInventory(Arch);
 	}
+	
+    public String Prefix() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
+    }
+    
+    public String GUIColor() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
+    }
+    
+    public String ItemColor() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
+    }
+    
+    public String MainColor() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
+    }
+    
+    public String TextColor() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
+    }
+    
+    public String HighlightColor() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
+    }
+    
+    public String ErrorPrefix() {
+    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
+    }
 }

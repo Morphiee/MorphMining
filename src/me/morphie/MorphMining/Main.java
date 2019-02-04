@@ -1,98 +1,129 @@
 package me.morphie.MorphMining;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import me.morphie.MorphMining.Archivist.Archivist;
-import me.morphie.MorphMining.Crates.CrateEvents;
-import me.morphie.MorphMining.Crates.CrateRewards;
-import me.morphie.MorphMining.Crates.CratesMenu;
-import me.morphie.MorphMining.MineLog.LogEvents;
-import me.morphie.MorphMining.MineLog.LogMenu;
+import me.morphie.MorphMining.Archivist.OreGrinderEvents;
+import me.morphie.MorphMining.DataLog.DatalogRecipe;
+import me.morphie.MorphMining.DataLog.LogBook;
+import me.morphie.MorphMining.DataLog.LogEvents;
+import me.morphie.MorphMining.DataLog.LogMenu;
+import me.morphie.MorphMining.Files.Messages;
+import me.morphie.MorphMining.Files.MetricsLite;
+import me.morphie.MorphMining.Items.CrafterItems;
+import me.morphie.MorphMining.Items.Pouch;
+import me.morphie.MorphMining.Items.PouchEvents;
+import me.morphie.MorphMining.Items.TrashCan;
+import me.morphie.MorphMining.Market.Market;
+import me.morphie.MorphMining.Market.ArtifactShop;
+import me.morphie.MorphMining.Market.ArtifactShopEvents;
 import me.morphie.MorphMining.Mining.NetherMining;
 import me.morphie.MorphMining.Mining.OverworldMining;
-import me.morphie.MorphMining.Shop.Shop;
-import me.morphie.MorphMining.Shop.ShopEvents;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.morphie.MorphMining.Mining.SpawnerMining;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
 public class Main extends JavaPlugin implements Listener {
 
 	public static Logger log = Logger.getLogger("Minecraft");
 	public static Economy econ = null;
-	public static Permission perms = null;
-	public static GriefPrevention griefpreventionPlugin = null;
-	public static WorldGuardPlugin worldguardPlugin = null;
+	public Messages messagescfg;
+	
 	private Archivist arch;
-	private CratesMenu crates;
-	private CrateEvents crateevents;
-	private CrateRewards craterewards;
-	private Dev dev;
+	private LogBook logbook;
 	private LogEvents logevents;
 	private LogMenu logmenu;
+	private Market market;
 	private OverworldMining mining;
 	private NetherMining nethermining;
-	private Shop shop;
-	private ShopEvents shopevents;
+	private OreGrinderEvents oregrinder;
+	private Pouch pouch;
+	private PouchEvents pouchevents;
+	private ArtifactShopEvents shopevents;
+	private SpawnerMining spawnermining;
 	private Station station;
-	private VersionChecker vc;
+	private MineStats stats;
+	private TrashCan trashcan;
 
 	public void onEnable() {
-		setupPluginDependencies();
 		this.arch = new Archivist(this);
-		this.crates = new CratesMenu(this);
-		this.crateevents = new CrateEvents(this);
-		this.craterewards = new CrateRewards(this);
-		this.dev = new Dev(this);
+		this.logbook = new LogBook(this);
 		this.logevents = new LogEvents(this);
 		this.logmenu = new LogMenu(this);
+		this.market = new Market(this);
 		this.mining = new OverworldMining(this);
 		this.nethermining = new NetherMining(this);
-		this.shop = new Shop(this);
-		this.shopevents = new ShopEvents(this);
+		this.oregrinder = new OreGrinderEvents(this);
+		this.pouch = new Pouch(this);
+		this.pouchevents = new PouchEvents(this);
+		this.shopevents = new ArtifactShopEvents(this);
+		this.spawnermining = new SpawnerMining(this);
 		this.station = new Station(this);
-		this.vc = new VersionChecker(this);
-		getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "MorphMining" + ChatColor.DARK_GRAY + " >> " + ChatColor.GREEN + "Plugin Enabled");
+		this.stats = new MineStats(this);
+		this.trashcan = new TrashCan(this);
 		getServer().getPluginManager().registerEvents(this, this);
 		getServer().getPluginManager().registerEvents(this.arch, this);
-		getServer().getPluginManager().registerEvents(this.crates, this);
-		getServer().getPluginManager().registerEvents(this.craterewards, this);
-		getServer().getPluginManager().registerEvents(this.crateevents, this);
+		getServer().getPluginManager().registerEvents(this.logbook, this);
 		getServer().getPluginManager().registerEvents(this.logevents, this);
 		getServer().getPluginManager().registerEvents(this.logmenu, this);
-		getServer().getPluginManager().registerEvents(this.dev, this);
+		getServer().getPluginManager().registerEvents(this.market, this);
 		getServer().getPluginManager().registerEvents(this.mining, this);
 		getServer().getPluginManager().registerEvents(this.nethermining, this);
+		getServer().getPluginManager().registerEvents(this.oregrinder, this);
+		getServer().getPluginManager().registerEvents(this.pouch, this);
+		getServer().getPluginManager().registerEvents(this.pouchevents, this);
 		getServer().getPluginManager().registerEvents(this.shopevents, this);
+		getServer().getPluginManager().registerEvents(this.spawnermining, this);
 		getServer().getPluginManager().registerEvents(this.station, this);
-		getServer().getPluginManager().registerEvents(this.vc, this);
+		getServer().getPluginManager().registerEvents(this.stats, this);
+		getServer().getPluginManager().registerEvents(this.trashcan, this);
 		
-		createConfig();
+		getCommand("mine").setExecutor(new Commands(this));
 		
-	    if (!setupEconomy())
-	    {
+	    if (!setupEconomy()) {
 	      getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", new Object[] { getDescription().getName() }));
 	      getServer().getPluginManager().disablePlugin(this);
 	      return;
 	    }
-	    setupPermissions();
+	    
+        MetricsLite metrics = new MetricsLite(this);
+	    
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bVersion&8: &a" + new Station(this).Version));
+		createConfig();
+		loadConfigManager();
+	    new CrafterItems(this).createRecipeTrashcan();
+	    new CrafterItems(this).createRecipePouch();
+	    new CrafterItems(this).createRecipeDatalog();
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bLoaded Recipes&8: &aTrashcan, Pouch, Datalog"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bPlugin Status&8: &aEnabled"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
 	}
 	
 	public void onDisable(){
-		getServer().getConsoleSender().sendMessage(ChatColor.DARK_RED + "MorphMining" + ChatColor.DARK_GRAY + " >> " + ChatColor.RED + "Plugin Disabled");
+		getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
+		getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bVersion&8: &a" + new Station(this).Version));
+		new CrafterItems(this).removeRecipes(new CrafterItems(this).recipeItems("trashcan"));
+		new CrafterItems(this).removeRecipes(new CrafterItems(this).recipeItems("pouch"));
+		new CrafterItems(this).removeRecipes(new CrafterItems(this).recipeItems("datalog"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bUnloaded Recipes&8: &aTrashcan, Pouch, Datalog"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bPlugin Status&8: &cDisabled"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
 	}
 	
 	private void createConfig() {
@@ -102,12 +133,12 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			File file = new File(getDataFolder(), "config.yml");
 			if (!file.exists()) {
-				getLogger().info("Config.yml not found, creating!");
+				getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bConfig&8: &aGenerating config."));
 				getConfig().options().copyDefaults(true);
 				saveDefaultConfig();
 		  }
 			else {
-				getLogger().info("Config.yml found, loading!");
+				getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bConfig&8: &aLoading config."));
 			}
 	    }
 	    catch (Exception e) {
@@ -126,120 +157,99 @@ public class Main extends JavaPlugin implements Listener {
 	    econ = (Economy)rsp.getProvider();
 	    return econ != null;
 	  }
+    
+    public void loadConfigManager() {
+      this.messagescfg = new Messages();
+      this.messagescfg.setup();
+    }
 	
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
-    }
-    
-    private void setupPluginDependencies() {
-        try {
-            setupWorldGuard();
-        } catch (Exception e) {
-            log.warning("[MorphMining] Failed to load WorldGuard");
-            e.printStackTrace();
-        }
-        try {
-            setupGriefPrevention();
-        } catch (Exception e) {
-            log.warning("[MorphMining] Failed to load GriefPrevention");
-            e.printStackTrace();
-        }
-    }
-    
-    private void setupGriefPrevention() {
-        Plugin gp = this.getServer().getPluginManager().getPlugin("GriefPrevention");
-        if (gp == null) {
-            log.info("[MorphMining] Couldn't hook into GriefPrevention, not depending!");
-        } else {
-            Main.griefpreventionPlugin = (GriefPrevention)gp;
-            log.info("[MorphMining] Hooked into GriefPrevention!");         
-        }
-    }
-    
-    private void setupWorldGuard() {
-        Plugin wg = this.getServer().getPluginManager().getPlugin("WorldGuard");
-        if (wg == null) {
-            log.info("[MorphMining] Couldn't hook into WorldGuard, not depending!");
-        } else {
-            Main.worldguardPlugin = (WorldGuardPlugin)wg;
-            log.info("[MorphMining] Hooked into WorldGuard!");         
-        }
-    }
-    
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("mine")) {
-			if (args.length == 0) {
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]--------+" + ChatColor.RESET + ChatColor.DARK_GRAY + "[ " + ChatColor.DARK_RED + ChatColor.ITALIC + "Morph Mining" + ChatColor.DARK_GRAY + " ]" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "+--------[");
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.RED + "/mine" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open this menu.");
-				sender.sendMessage(ChatColor.RED + "/mine menu" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the miners station.");
-				sender.sendMessage(ChatColor.RED + "/mine shop" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the mining shop.");
-				sender.sendMessage(ChatColor.RED + "/mine log" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the miners log.");
-				if (perms.has(sender, "morphmining.admin")) {
-					sender.sendMessage(ChatColor.RED + "/mine dev" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the admin menu! (Perms Required)");
-					sender.sendMessage(ChatColor.RED + "/mine reload" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the admin menu! (Perms Required)");
-				}
-				sender.sendMessage("");
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-------------+" + ChatColor.RESET + ChatColor.DARK_GRAY + "[" + ChatColor.DARK_RED + ChatColor.BOLD + "!" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "+-------------[");
-				sender.sendMessage("");
-				return true;
-			
-			}
-			if (args[0].equalsIgnoreCase("menu")) {
-				Player player = (Player)sender;
-				this.station.openGUIMining(player);
-				return true;
-			}
-			else if (args[0].equalsIgnoreCase("log")) {
-				Player player = (Player)sender;
-				this.logmenu.openGUIMineLog(player);
-				return true;
-			}
-			else if (args[0].equalsIgnoreCase("shop")) {
-				Player player = (Player)sender;
-				this.shop.openGUIShop(player);
-				return true;
-			}
-			else if (args[0].equalsIgnoreCase("crates")) {
-				Player player = (Player)sender;
-				this.crates.openGUICrate(player);
-				return true;
-			}
-			else if (args[0].equalsIgnoreCase("dev")) {
-				Player player = (Player)sender;
-				if (perms.has(player, "morphmining.dev") || (perms.has(player, "morphmining.admin"))) {
-					this.dev.openGUIDev(player);
-					return true;
-				}
-				else {
-					player.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.DARK_GRAY + ChatColor.BOLD + "]" + ChatColor.RED + ChatColor.ITALIC + " You don't have permission to access this!");
-					return true;
-				}
-			}
-			else if (args[0].equalsIgnoreCase("reload")) {
-				if (perms.has(sender, "morphmining.reload") || (perms.has(sender, "morphmining.admin"))){
-		          Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("MorphMining");
-		          if (plugin != null)
-		          {
-		            reloadConfig();
-		            sender.sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Mining" + ChatColor.DARK_GRAY + ChatColor.BOLD + " >> " + ChatColor.GRAY + "MorphMining has been successfully reloaded!");
-		            return true;
-		          }
+	@EventHandler
+	public void onJoin(PlayerJoinEvent e) {
+		Player player = e.getPlayer();
+		UUID uuid = player.getUniqueId();
+		
+		new BukkitRunnable() {
+			public void run() {
+				File file = Main.this.getData(uuid);
+		        FileConfiguration pd = YamlConfiguration.loadConfiguration(file);
+		        if (!pd.contains("Stats.Gems")) {
+		        	pd.set("Stats.Gems", Integer.valueOf(0));
+		        	pd.set("Stats.ArtifactsMinedAll", Integer.valueOf(0));
+		        	pd.set("Stats.ArtifactsMinedCommon", Integer.valueOf(0));
+		        	pd.set("Stats.ArtifactsMinedRare", Integer.valueOf(0));
+		        	pd.set("Stats.ArtifactsMinedLegendary", Integer.valueOf(0));
+		        	pd.set("Stats.ArtifactsMinedMythic", Integer.valueOf(0));
+		        	pd.set("Stats.ArtifactsMinedHellstone", Integer.valueOf(0));
+		        	pd.set("Stats.StoneMined", Integer.valueOf(0));
+		        	pd.set("Stats.CoalOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.RedstoneOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.IronOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.GoldOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.LapisOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.DiamondOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.EmeraldOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.QuartzOreMined", Integer.valueOf(0));
+		        	pd.set("Stats.MoneyEarned", Integer.valueOf(0));
+		        	pd.set("Pouch.Enabled", Boolean.valueOf(false));
+		        	pd.set("Pouch.CommonUpgrade", Boolean.valueOf(false));
+		        	pd.set("Pouch.RareUpgrade", Boolean.valueOf(false));
+		        	pd.set("Pouch.LegendaryUpgrade", Boolean.valueOf(false));
+		        	pd.set("Pouch.MythicUpgrade", Boolean.valueOf(false));
+		        	pd.set("Pouch.Common", Integer.valueOf(0));
+		        	pd.set("Pouch.Rare", Integer.valueOf(0));
+		        	pd.set("Pouch.Legendary", Integer.valueOf(0));
+		        	pd.set("Pouch.Mythic", Integer.valueOf(0));
+		            try {
+		              pd.save(file);
+		            }
+		            catch (IOException e) {
+		              Bukkit.getServer().getLogger().log(Level.SEVERE, "Could not save " + uuid + "'s player file!");
+		              e.printStackTrace();
+		            }
 		        }
-		        else
-		        {
-		          sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.DARK_GRAY + ChatColor.BOLD + "]" + ChatColor.RED + ChatColor.ITALIC + " You don't have permission to do this!");
-		          return true;
-		        }
-		      }
-			else {
-				sender.sendMessage(ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "[" + ChatColor.RED + ChatColor.BOLD + "!" + ChatColor.DARK_GRAY + ChatColor.BOLD + "]" + ChatColor.RED + " Invaild argument! Use /mine to view all commands.");
-				return true;
 			}
-		}
-		return false;
+		}.runTaskLater(this, 60L);		
 	}
+	
+	public File getData(UUID uuid) {
+		File data = new File(getDataFolder() + File.separator + "PlayerData", uuid + ".yml");
+	    FileConfiguration dataFile = YamlConfiguration.loadConfiguration(data);
+	    if (!data.exists()) {
+	    	try {
+	    		dataFile.save(data);
+	    	}	
+	    	catch (IOException e1) {
+	    		e1.printStackTrace();
+	    	}
+	    }
+		return data;  
+	}
+	
+    public String Prefix() {
+    	return this.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
+    }
+    
+    public String GUIColor() {
+    	return this.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
+    }
+    
+    public String ItemColor() {
+    	return this.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
+    }
+    
+    public String MainColor() {
+    	return this.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
+    }
+    
+    public String TextColor() {
+    	return this.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
+    }
+    
+    public String HighlightColor() {
+    	return this.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
+    }
+    
+    public String ErrorPrefix() {
+    	return this.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
+    }
 }

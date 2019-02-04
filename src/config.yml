@@ -1,10 +1,28 @@
+#============================================================================================================================|
 #    _____                          .__        _____   .__         .__                 
 #   /     \    ____ _______ ______  |  |__    /     \  |__|  ____  |__|  ____    ____  
 #  /  \ /  \  /  _ \\_  __ \\____ \ |  |  \  /  \ /  \ |  | /    \ |  | /    \  / ___\ 
 # /    Y    \(  <_> )|  | \/|  |_> >|   Y  \/    Y    \|  ||   |  \|  ||   |  \/ /_/  >
 # \____|__  / \____/ |__|   |   __/ |___|  /\____|__  /|__||___|  /|__||___|  /\___  / 
 #         \/                |__|         \/         \/          \/          \//_____/  
+#
+#============================================================================================================================|
+#
+# Plugin Version: 1.3.0
+# Spigot Link: https://www.spigotmc.org/resources/morphmining.53827/
+# Author's Discord: Morphie#6969
+# 
+# If you have issues or questions feel free to message me on spigot OR discord.
+# Please do keep in mind however that I will respond when I can! <3
+#
+#============================================================================================================================|
 
+# Change the glass color in all menus by using the glasses data value!
+# Data value ranges from 0 - 15.
+MainGlassColor: 11
+
+# Whether players are given a DataLog on first join!
+GiveBookOnFirstJoin: true
 
 # Change the price of artifacts here!
 ArtifactPrice:
@@ -12,42 +30,153 @@ ArtifactPrice:
   Rare: 250.00
   Legendary: 750.00
   Mythic: 2500.00
+  HellStone: 1000.00
+  
+# Change the gem chances of the ore grinder. (0 - 100)
+OreGrinder:
+  CoalGemChance: 5
+  IronGemChance: 10
+  GoldGemChance: 10
+  RedstoneGemChance: 15
+  LapisGemChance: 20
+  DiamondGemChance: 25
+  EmeraldGemChance: 30
 
-# Change the crate open price here!
-CrateOpenCost:
-  PileOfRocks: 10.00
-  IronedOut: 20.00
-  MinersDream: 30.00
+# Here you can change things about the pouch system. Pouches are a craftable item that allows the user to store artifacts.
+# Pouches have levels that unlock more capacity space at the cost of gems and your servers currency.
+Pouches:
+  Common:
+    StartCapacity: 100
+    UpgradedCapacity: 200
+    GemCost: 100
+    CurrencyCost: 1500.00
+  Rare:
+    StartCapacity: 75
+    UpgradedCapacity: 150
+    GemCost: 150
+    CurrencyCost: 3000.00
+  Legendary:
+    StartCapacity: 50
+    UpgradedCapacity: 100
+    GemCost: 250
+    CurrencyCost: 5000.00
+  Mythic:
+    StartCapacity: 50
+    UpgradedCapacity: 100
+    GemCost: 350
+    CurrencyCost: 7000.00
 
 # Got a neat idea for an artifact? Create your own here!
-# Keep in mind the desction will only set 1 line of the lore.
+# Keep in mind the description will only set 1 line of the lore.
 # Color codes supported!
 Artifacts:
   Common:
+    0:
+      Name: "&9&lHelix Fossil"
+      Description: "&b➛ &7&oOAK: Ash! This isn't the time to use that!"
     1:
-      Name: '&c&lMercys Wrath'
-      Description: '&7&oI need healing!'
+      Name: "&9&lArchenmity"
+      Description: "&b➛ &7&oI shall always be by your side. *maniacal laugh*"
     2:
-      Name: '&c&lTest'
-      Description: '&7&oI need healing!'
+      Name: "&9&lStone Masons axe"
+      Description: "&b➛ &7&oPut it in the pile!"
+    3:
+      Name: "&9&lHopes & Dreams"
+      Description: "&b➛ &7&oRest In Pieces.."
+    4:
+      Name: "&9&lCopper Relic"
+      Description: "&b➛ &7&oOh, yay... this again..."
+    5:
+      Name: "&9&lRelic of a Sayian"
+      Description: "&b➛ &7&oKIO-KEN!"
+    6:
+      Name: "&9&lRaptor's Claw"
+      Description: "&b➛ &7&oNOT so clever girl!"
+    7:
+      Name: "&9&lShit-posting license"
+      Description: "&b➛ &7&oYou got a license for that shitpost?"
+    8:
+      Name: "&9&lBat guano"
+      Description: "&b➛ &7&oApparently bats have been here."
+    9:
+      Name: "&9&lSong of the sea"
+      Description: "&b➛ &7&oThe mermaids are singing this tune."
+    10:
+      Name: "&9&lAmbrosium Shard"
+      Description: "&b➛ &7&oA strange ore from another world."
+    11:
+      Name: "&9&lPetrified wood"
+      Description: "&b➛ &7&oSeems a bit hard at times."
+    12:
+      Name: "&9&lRunite"
+      Description: "&b➛ &7&oThe metal of the famous Rune Armour."
   Rare:
+    0:
+      Name: "&9&lRelic of a Super Sayian"
+      Description: "&b➛ &7&oKio what!?"
     1:
-      Name: '&c&lArk of Strength'
-      Description: '&7How tough are ya?'
+      Name: "&9&lElf's bane"
+      Description: "&b➛ &7&oHa! no elf would dare touch this dirty thing!"
     2:
-      Name: '&c&lRare Test'
-      Description: '&7&oI need healing!'
+      Name: "&9&lLast Bastion"
+      Description: "&b➛ &7&oFragments of a long dead city.."
+    3:
+      Name: "&9&lJaek Poll"
+      Description: "&b➛ &7&oDabbin' on them haters!"
+    4:
+      Name: "&9&lKey Fragment"
+      Description: "&b➛ &7&oA key fragment to an unknown treasure."
+    5:
+      Name: "&9&lGucci Gang"
+      Description: "&b➛ &7&oGucci gang Gucci gang Gucci gang."
+    6:
+      Name: "&9&lAgate"
+      Description: "&b➛ &7&oNot Bill, Melinda, or a golden bridge."
+    7:
+      Name: "&9&lHeart Piece"
+      Description: "&b➛ &7&oAnother piece of my broken heart."
   Legendary:
+    0:
+      Name: "&9&lEcho's Fortune"
+      Description: "&b➛ &7&oCan you hear me now?"
     1:
-      Name: '&c&lEchos Fortune'
-      Description: '&7&oCan you hear me now?'
+      Name: "&9&lMass Accelerator"
+      Description: "&b➛ &7&oGotta go fast!"
     2:
-      Name: '&c&lLegend Test'
-      Description: '&7&oI need healing!'
+      Name: "&9&lHeart of the Mountain"
+      Description: "&b➛ &7&oThe right of every true dwarf king."
+    3:
+      Name: "&9&lNose of the Great Sphinx"
+      Description: "&b➛ &7&oCan you smell that...?"
+    4:
+      Name: "&9&lGenjicite"
+      Description: "&b➛ &7&oI need healing!"
+    5:
+      Name: "&9&lLost Treasure Map"
+      Description: "&b➛ &7&oMaybe the treasure is still there...?"
+    6:
+      Name: "&9&lGolden Claw"
+      Description: "&b➛ &7&oA peculiar claw with three symbols on it."
   Mythic:
+    0:
+      Name: "&9&lTorments Serenity"
+      Description: "&b➛ &7&oAre you crying?"
     1:
-      Name: '&c&lTorments Serenity'
-      Description: '&7&oAre you crying?'
+      Name: "&9&lFragment of Wuuthrad"
+      Description: "&b➛ &7&oA long forgotten fragment of the mighty Elf Grinder!"
     2:
-      Name: '&c&lMythic Test'
-      Description: '&7&oI need healing!'
+      Name: "&9&lNatura"
+      Description: "&b➛ &7&oCould This Be The Missing Link?"
+    3:
+      Name: "&9&lDepleted Ankh of Undying"
+      Description: "&b➛ &7&oSeems this one has been used already."
+    4:
+      Name: "&9&l42"
+      Description: "&b➛ &7&oYou just found the meaning to life, the universe, and everything!"
+    5:
+      Name: "&9&lBezoar"
+      Description: "&b➛ &7&oThe Power of a Universal Antidote!"
+  HellStone:
+    0:
+      Name: "&9&lHell Stone"
+      Description: "&b➛ &7&oIs something burning?"
