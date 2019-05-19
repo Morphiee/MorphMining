@@ -1,25 +1,32 @@
 package me.morphie.MorphMining;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.morphie.MorphMining.Archivist.Archivist;
 import me.morphie.MorphMining.Archivist.OreGrinderEvents;
-import me.morphie.MorphMining.DataLog.DatalogRecipe;
 import me.morphie.MorphMining.DataLog.LogBook;
 import me.morphie.MorphMining.DataLog.LogEvents;
 import me.morphie.MorphMining.DataLog.LogMenu;
@@ -28,9 +35,8 @@ import me.morphie.MorphMining.Files.MetricsLite;
 import me.morphie.MorphMining.Items.CrafterItems;
 import me.morphie.MorphMining.Items.Pouch;
 import me.morphie.MorphMining.Items.PouchEvents;
-import me.morphie.MorphMining.Items.TrashCan;
+import me.morphie.MorphMining.Items.TrashCanEvent;
 import me.morphie.MorphMining.Market.Market;
-import me.morphie.MorphMining.Market.ArtifactShop;
 import me.morphie.MorphMining.Market.ArtifactShopEvents;
 import me.morphie.MorphMining.Mining.NetherMining;
 import me.morphie.MorphMining.Mining.OverworldMining;
@@ -44,7 +50,6 @@ public class Main extends JavaPlugin implements Listener {
 	public static Economy econ = null;
 	public Messages messagescfg;
 	
-	private Archivist arch;
 	private LogBook logbook;
 	private LogEvents logevents;
 	private LogMenu logmenu;
@@ -58,10 +63,9 @@ public class Main extends JavaPlugin implements Listener {
 	private SpawnerMining spawnermining;
 	private Station station;
 	private MineStats stats;
-	private TrashCan trashcan;
+	private TrashCanEvent trashcan;
 
 	public void onEnable() {
-		this.arch = new Archivist(this);
 		this.logbook = new LogBook(this);
 		this.logevents = new LogEvents(this);
 		this.logmenu = new LogMenu(this);
@@ -75,9 +79,9 @@ public class Main extends JavaPlugin implements Listener {
 		this.spawnermining = new SpawnerMining(this);
 		this.station = new Station(this);
 		this.stats = new MineStats(this);
-		this.trashcan = new TrashCan(this);
+		this.trashcan = new TrashCanEvent(this);
 		getServer().getPluginManager().registerEvents(this, this);
-		getServer().getPluginManager().registerEvents(this.arch, this);
+		getServer().getPluginManager().registerEvents(new Archivist(), this);
 		getServer().getPluginManager().registerEvents(this.logbook, this);
 		getServer().getPluginManager().registerEvents(this.logevents, this);
 		getServer().getPluginManager().registerEvents(this.logmenu, this);
@@ -101,16 +105,14 @@ public class Main extends JavaPlugin implements Listener {
 	      return;
 	    }
 	    
-        MetricsLite metrics = new MetricsLite(this);
+        new MetricsLite(this);
 	    
 	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
 	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bVersion&8: &a" + new Station(this).Version));
 		createConfig();
 		loadConfigManager();
-	    new CrafterItems(this).createRecipeTrashcan();
-	    new CrafterItems(this).createRecipePouch();
-	    new CrafterItems(this).createRecipeDatalog();
-	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bLoaded Recipes&8: &aTrashcan, Pouch, Datalog"));
+		recipeBackup();
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bRecipes&8: &aLoaded"));
 	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bPlugin Status&8: &aEnabled"));
 	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
 	}
@@ -118,10 +120,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDisable(){
 		getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
 		getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bVersion&8: &a" + new Station(this).Version));
-		new CrafterItems(this).removeRecipes(new CrafterItems(this).recipeItems("trashcan"));
-		new CrafterItems(this).removeRecipes(new CrafterItems(this).recipeItems("pouch"));
-		new CrafterItems(this).removeRecipes(new CrafterItems(this).recipeItems("datalog"));
-	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bUnloaded Recipes&8: &aTrashcan, Pouch, Datalog"));
+	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bRecipes&8: &cUnloaded"));
 	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bPlugin Status&8: &cDisabled"));
 	    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[----------[&3MorphMining&8]----------]"));
 	}
@@ -136,8 +135,7 @@ public class Main extends JavaPlugin implements Listener {
 				getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bConfig&8: &aGenerating config."));
 				getConfig().options().copyDefaults(true);
 				saveDefaultConfig();
-		  }
-			else {
+			} else {
 				getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&bConfig&8: &aLoading config."));
 			}
 	    }
@@ -225,31 +223,90 @@ public class Main extends JavaPlugin implements Listener {
 		return data;  
 	}
 	
-    public String Prefix() {
-    	return this.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
+	public int getArtifacts(String paramString) {
+		int i = 0;
+	    while (this.getConfig().getString("Artifacts." + paramString + "." + i + ".Name") != null) {
+	    	i++;
+	    }
+	    i--;
+	    
+	    return i;
+	}
+	
+	public void recipeBackup() {
+        Iterator<Recipe> it = getServer().recipeIterator();
+
+        try {
+	        while (it.hasNext()) {
+	            Recipe recipe = it.next();
+	            if (recipe.getResult().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.getMessage("Menus.ItemColor") + "TrashCan"))) {
+	            	it.remove();
+	            } else if (recipe.getResult().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.getMessage("Menus.ItemColor") + "Miner's Pouch"))) {
+	            	it.remove();
+	            } else if (recipe.getResult().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.getMessage("Menus.ItemColor") + "MorphMining DataLog"))) {
+	            	it.remove();
+	            }
+	        }	
+        } catch (NullPointerException e1) {
+        }
+
+        this.loadRecipes();
+	}
+	
+	public void loadRecipes() {
+		if (this.getConfig().getBoolean("Recipes.Trashcan.Enabled") == true) {
+			try {
+				new CrafterItems(this).createRecipeTrashcan();
+			} catch (IllegalStateException ie) {
+			}
+		}
+		if (this.getConfig().getBoolean("Recipes.Pouch.Enabled") == true) {
+			try {
+				new CrafterItems(this).createRecipePouch();
+			} catch (IllegalStateException ie) {
+			}
+		}
+		if (this.getConfig().getBoolean("Recipes.Datalog.Enabled") == true) {
+			try {
+				new CrafterItems(this).createRecipeDatalog();
+			} catch (IllegalStateException ie) {
+			}
+		}
+	}
+	
+    public ItemStack createInventoryItem(String paramString1, int paramInt, String paramString2, ArrayList<String> paramArrayList, boolean paramBoolean, int durability) {
+    	ItemStack localItemStack = new ItemStack(Material.matchMaterial(paramString1), paramInt);
+    	localItemStack.setDurability((short) durability);
+    	ItemMeta localItemMeta = localItemStack.getItemMeta();
+    	if (paramBoolean) {
+    		localItemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+    		localItemMeta.addItemFlags(new ItemFlag[] { ItemFlag.HIDE_ENCHANTS });
+    	}
+    	localItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', paramString2));
+    	localItemMeta.setLore(paramArrayList);
+    	localItemStack.setItemMeta(localItemMeta);
+    	return localItemStack;
     }
     
-    public String GUIColor() {
-    	return this.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
+    public ItemStack createInventoryGlassItem(String paramString1, int glassInt, int paramInt, String paramString2, ArrayList<String> paramArrayList, boolean paramBoolean) {
+    	ItemStack localItemStack = new ItemStack(Material.matchMaterial(paramString1), paramInt, (short) glassInt);
+    	ItemMeta localItemMeta = localItemStack.getItemMeta();
+    	if (paramBoolean) {
+    		localItemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+    		localItemMeta.addItemFlags(new ItemFlag[] { ItemFlag.HIDE_ENCHANTS });
+    	}
+    	localItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', paramString2));
+    	localItemMeta.setLore(paramArrayList);
+    	localItemStack.setItemMeta(localItemMeta);
+    	return localItemStack;
     }
-    
-    public String ItemColor() {
-    	return this.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
+
+	public String getMessage(String string) {
+		return this.messagescfg.messagesCFG.getString(string);
+	}
+	
+	public List<String> getMessageList(String string) {
+		return this.messagescfg.messagesCFG.getStringList(string);
+	}
+	
 }

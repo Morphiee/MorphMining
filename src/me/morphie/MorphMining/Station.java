@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -26,11 +28,11 @@ public class Station implements Listener {
 		this.plugin = plugin;
 	}
 	
-	public String Version = "1.3.1";
+	public String Version = "1.5.1";
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Mining Station")) {
+		if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Mining Station")) {
 			Player player = (Player)event.getWhoClicked();
 			if ((event.getCurrentItem() == null) || (!event.getCurrentItem().hasItemMeta())) {
 				return;
@@ -38,7 +40,7 @@ public class Station implements Listener {
 			switch (event.getCurrentItem().getType()) {
 			case END_CRYSTAL:
 				player.closeInventory();
-				new Archivist(this.plugin).openGUIArch(player);
+				new Archivist().openGUIArch(player);
 				break;
 			case ENDER_CHEST: 
 				player.closeInventory();
@@ -50,7 +52,7 @@ public class Station implements Listener {
 				break;
 			case PAPER:
 				event.setCancelled(true);
-				player.sendMessage(ChatColor.GRAY + "https://www.spigotmc.org/resources/morphmining.53827/");
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("SpigotLink")));
 				break;
 			case PLAYER_HEAD:
 				player.closeInventory();
@@ -68,79 +70,79 @@ public class Station implements Listener {
 	}
 	
 	public void openGUIMining(Player player) {
-		Inventory Menu = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Mining Station"));
+		Inventory Menu = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "Mining Station"));
 
 		ItemStack credits = new ItemStack(Material.PAPER);
 		ItemMeta creditsMeta = credits.getItemMeta();
 		ArrayList<String> creditslore = new ArrayList();
-		creditslore.add(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Version" + "&8: " + "&7" + this.Version));
+		creditslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Version" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + this.Version));
 		creditslore.add("");
-	    creditslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Code Contributors" + "&8:"));
-	    creditslore.add(ChatColor.DARK_GRAY + "-" + ChatColor.GRAY + " Morphie");
-	    creditslore.add(ChatColor.DARK_GRAY + "-" + ChatColor.GRAY + " PyroTempus");
+	    creditslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Code Contributors" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+	    creditslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.SpacerColor") + "-" + this.plugin.getMessage("Menus.LoreColor") + " Morphie"));
+	    creditslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.SpacerColor") + "-" + this.plugin.getMessage("Menus.LoreColor") + " PyroTempus"));
 		creditslore.add("");
-	    creditslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Click for Spigot link!"));
+	    creditslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Click for Spigot link!"));
 	    creditsMeta.setLore(creditslore);
 	    
-	    creditsMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Credits"));
+	    creditsMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Credits"));
 	    credits.setItemMeta(creditsMeta);
 		
 	    ItemStack arch = new ItemStack(Material.END_CRYSTAL);
 	    ItemMeta archMeta = arch.getItemMeta();
 	    ArrayList<String> archlore = new ArrayList();
-	    archlore.add(ChatColor.GRAY + "Mining Master!");
+	    archlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Mining Master!"));
 	    archlore.add("");
-	    archlore.add(ChatColor.GRAY + "The archivist manages");
-	    archlore.add(ChatColor.GRAY + "a miner's utilities.");
+	    archlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "The archivist manages"));
+	    archlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "a miner's utilities."));
 	    archMeta.setLore(archlore);
 	    
-	    archMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "The Archivist"));
+	    archMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "The Archivist"));
 	    arch.setItemMeta(archMeta);
 	    
 	    ItemStack shop = new ItemStack(Material.ENDER_CHEST);
 	    ItemMeta shopMeta = shop.getItemMeta();
 	    ArrayList<String> shoplore = new ArrayList();
-	    shoplore.add(ChatColor.GRAY + "Buy and sell all");
-	    shoplore.add(ChatColor.GRAY + "your mining goods!");
+	    shoplore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Buy and sell all"));
+	    shoplore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "your mining goods!"));
 	    shopMeta.setLore(shoplore);
 	    
-	    shopMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Miner's Market"));
+	    shopMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Miner's Market"));
 	    shop.setItemMeta(shopMeta);
 	    
 	    ItemStack log = new ItemStack(Material.BOOK);
 	    ItemMeta logMeta = log.getItemMeta();
 	    ArrayList<String> loglore = new ArrayList();
-	    loglore.add(ChatColor.GRAY + "What's an artifact?");
+	    loglore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "What's an artifact?"));
 	    loglore.add("");
-	    loglore.add(ChatColor.GRAY + "Information about artifacts,");
-	    loglore.add(ChatColor.GRAY + "recipes, and more!");
+	    loglore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Information about artifacts,"));
+	    loglore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "recipes, and more!"));
 	    logMeta.setLore(loglore);
 	    
-	    logMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() +"Miner's Log"));
+	    logMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Miner's Log"));
 	    log.setItemMeta(logMeta);
 	    
 	    ItemStack spawner = new ItemStack(Material.SPAWNER);
 	    ItemMeta spawnerMeta = spawner.getItemMeta();
 	    ArrayList<String> spawnerlore = new ArrayList();
-	    spawnerlore.add(ChatColor.GRAY + "A unique twist on spawners!");
+	    spawnerlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "A unique twist on spawners!"));
 	    spawnerlore.add(" ");
-	    spawnerlore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "&oComing soon!"));
+	    spawnerlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing soon!"));
 	    spawnerMeta .setLore(spawnerlore);
 	    
-	    spawnerMeta .setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Spawners"));
+	    spawnerMeta .setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Spawners"));
 	    spawner.setItemMeta(spawnerMeta );
 	    
 	    ItemStack craft = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
 	    SkullMeta craftMeta = (SkullMeta) craft.getItemMeta();
 	    craftMeta.setOwner(player.getName());
 	    ArrayList<String> craftlore = new ArrayList();
-	    craftlore.add(ChatColor.GRAY + "Your MorphMining stats!");
+	    craftlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Your MorphMining stats!"));
 	    craftMeta .setLore(craftlore);
 	    
-	    craftMeta .setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Stats"));
+	    craftMeta .setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Stats"));
 	    craft.setItemMeta(craftMeta );
 	    
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -200,32 +202,4 @@ public class Station implements Listener {
 	    
 	    player.openInventory(Menu);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

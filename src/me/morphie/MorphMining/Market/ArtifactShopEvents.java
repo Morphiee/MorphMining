@@ -1,5 +1,6 @@
 package me.morphie.MorphMining.Market;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -9,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import me.morphie.MorphMining.Main;
@@ -26,7 +28,7 @@ public class ArtifactShopEvents implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Artifact Shop")) {
+		if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Artifact Shop")) {
 			Player player = (Player)event.getWhoClicked();
 			if ((event.getCurrentItem() == null) || (!event.getCurrentItem().hasItemMeta())) {
 				return;
@@ -51,10 +53,8 @@ public class ArtifactShopEvents implements Listener {
 	}
 	
   @EventHandler
-  public void onShopClose(InventoryCloseEvent event)
-  {
-    if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Artifact Shop"))
-    {
+  public void onShopClose(InventoryCloseEvent event) {
+	  if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Artifact Shop")) {
       Inventory inv = event.getInventory();
       Player player = (Player)event.getPlayer();
       UUID uuid = player.getUniqueId();
@@ -71,35 +71,35 @@ public class ArtifactShopEvents implements Listener {
         ItemStack item = inv.getItem(i);
         if (item != null) {
         	if (item.hasItemMeta()) {
-  	          if (item.getType() == Material.GOLD_NUGGET || item.getType() == Material.FIREWORK_STAR) {
+  	          if (item.getType() == Material.matchMaterial(this.plugin.getConfig().getString("Settings.ArtifactItem")) || item.getType() == Material.matchMaterial(this.plugin.getConfig().getString("Settings.HellstoneItem"))) {
 	            int x = item.getAmount();
 	            while (x > 0) {
 	              x--;
-	              if (item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Common")) || item.getItemMeta().getDisplayName().contains(ChatColor.GRAY + "" + ChatColor.BOLD + "Common Artifact")) {
+	              if (ChatColor.stripColor(item.getItemMeta().getLore().get(4)).equals("Tier » Common") && ChatColor.stripColor(item.getItemMeta().getLore().get(6)).equals("MorphMining")) {
 	                Main.econ.depositPlayer(player, CommonPrice);
 					new playerFileMethods(this.plugin).addMoney(player, uuid, "Stats.MoneyEarned", CommonPrice);
 	                Artifacts++;
 	                Money = (int)(Money + CommonPrice);
 	              }
-	              else if (item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Rare")) || item.getItemMeta().getDisplayName().contains(ChatColor.AQUA + "" + ChatColor.BOLD + "Rare Artifact")) {
+	              else if (ChatColor.stripColor(item.getItemMeta().getLore().get(4)).equals("Tier » Rare") && ChatColor.stripColor(item.getItemMeta().getLore().get(6)).equals("MorphMining")) {
 	                Main.econ.depositPlayer(player, RarePrice);
 	                new playerFileMethods(this.plugin).addMoney(player, uuid, "Stats.MoneyEarned", RarePrice);
 	                Artifacts++;
 	                Money = (int)(Money + RarePrice);
 	              }
-	              else if (item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Legendary")) || item.getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD + "Legendary Artifact")) {
+	              else if (ChatColor.stripColor(item.getItemMeta().getLore().get(4)).equals("Tier » Legendary") && ChatColor.stripColor(item.getItemMeta().getLore().get(6)).equals("MorphMining")) {
 	                Main.econ.depositPlayer(player, LegendaryPrice);
 	                new playerFileMethods(this.plugin).addMoney(player, uuid, "Stats.MoneyEarned", LegendaryPrice);
 	                Artifacts++;
 	                Money = (int)(Money + LegendaryPrice);
 	              }
-	              else if (item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Mythic")) || item.getItemMeta().getDisplayName().contains(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Mythic Artifact")) {
+	              else if (ChatColor.stripColor(item.getItemMeta().getLore().get(4)).equals("Tier » Mythic") && ChatColor.stripColor(item.getItemMeta().getLore().get(6)).equals("MorphMining")) {
 	                Main.econ.depositPlayer(player, MythicPrice);
 	                new playerFileMethods(this.plugin).addMoney(player, uuid, "Stats.MoneyEarned", MythicPrice);
 	                Artifacts++;
 	                Money = (int)(Money + MythicPrice);
 	              }
-	              else if (item.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7HellStone"))) {
+	              else if (ChatColor.stripColor(item.getItemMeta().getLore().get(4)).equals("Tier » HellStone") && ChatColor.stripColor(item.getItemMeta().getLore().get(6)).equals("MorphMining")) {
 		                Main.econ.depositPlayer(player, HellStonePrice);
 		                new playerFileMethods(this.plugin).addMoney(player, uuid, "Stats.MoneyEarned", HellStonePrice);
 		                Artifacts++;
@@ -114,36 +114,8 @@ public class ArtifactShopEvents implements Listener {
           }
       	}
       	if ((Money != 0) && (Artifacts != 0)) {
-      		player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + ChatColor.GRAY + " You got " + HighlightColor() + "$" + Money + ChatColor.GRAY + " from " + HighlightColor() + Artifacts + ChatColor.GRAY + " artifacts!"));
+      		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("ArtifactSellMessage").replace("MONEY", "" + Money).replace("ARTIFACT", "" + Artifacts)));
       	}
     }
  }
-  
-  public String Prefix() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-  }
-  
-  public String GUIColor() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-  }
-  
-  public String ItemColor() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-  }
-  
-  public String MainColor() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-  }
-  
-  public String TextColor() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-  }
-  
-  public String HighlightColor() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-  }
-  
-  public String ErrorPrefix() {
-  	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-  }
 }

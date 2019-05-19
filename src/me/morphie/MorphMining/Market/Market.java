@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import me.morphie.MorphMining.Main;
@@ -25,7 +26,7 @@ public class Market implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Miner's Market")) {
+		if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Miner's Market")) {
 			Player player = (Player)event.getWhoClicked();
 			if ((event.getCurrentItem() == null) || (!event.getCurrentItem().hasItemMeta())) {
 				return;
@@ -63,58 +64,58 @@ public class Market implements Listener {
 	}
 	
 	public void openGUIMarket(Player player) {
-		Inventory Menu = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Miner's Market"));
+		Inventory Menu = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "Miner's Market"));
 		
 		ItemStack Coming = new ItemStack(Material.STRUCTURE_VOID);
 		ItemMeta ComingMeta = Coming.getItemMeta();
-		ComingMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Coming Soon!"));
+		ComingMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing Soon!"));
 		Coming.setItemMeta(ComingMeta);
 
 		ItemStack Buy = new ItemStack(Material.EMERALD_BLOCK);
 		ItemMeta BuyMeta = Buy.getItemMeta();
-		BuyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Buy"));
+		BuyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Buy"));
 		Buy.setItemMeta(BuyMeta);
 		
 		ItemStack Sell = new ItemStack(Material.LAPIS_BLOCK);
 		ItemMeta SellMeta = Sell.getItemMeta();
-		SellMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Sell"));
+		SellMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Sell"));
 		Sell.setItemMeta(SellMeta);
 	    
 	    ItemStack Gems = new ItemStack(Material.PRISMARINE_CRYSTALS);
 	    ItemMeta GemsMeta = Gems.getItemMeta();
 	    ArrayList<String> Gemslore = new ArrayList();
-	    Gemslore.add(ChatColor.translateAlternateColorCodes('&', TextColor() + "Spend your gems for mining goods!"));
+	    Gemslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Spend your gems for mining goods!"));
 	    Gemslore.add(" ");
-	    Gemslore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    Gemslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing soon!"));
 	    GemsMeta.setLore(Gemslore);
-	    GemsMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Gem Shop"));
+	    GemsMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Gem Shop"));
 	    Gems.setItemMeta(GemsMeta);
 	    
 	    ItemStack Art = new ItemStack(Material.CHEST);
 	    ItemMeta ArtMeta = Art.getItemMeta();
 	    ArrayList<String> Artlore = new ArrayList();
-	    Artlore.add(ChatColor.GRAY + "Sell your artifacts here!");
+	    Artlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Sell your artifacts here!"));
 	    ArtMeta.setLore(Artlore);
-	    ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Artifact Shop"));
+	    ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Artifact Shop"));
 	    Art.setItemMeta(ArtMeta);
 	    
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "Click on a shop to view more!");
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click on a shop to view more!"));
 		InfoMeta.setLore(Infolore);
-		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 		Info.setItemMeta(InfoMeta);
 		
 		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
-	    Backlore.add(ChatColor.GRAY + "Click to go back!");
+	    Backlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click to go back!"));
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back" + "&8:"));
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Back" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 	    Back.setItemMeta(BackMeta);
 	    
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -159,32 +160,4 @@ public class Market implements Listener {
 	    
 	    player.openInventory(Menu);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

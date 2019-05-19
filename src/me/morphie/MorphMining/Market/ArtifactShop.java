@@ -22,24 +22,24 @@ public class ArtifactShop implements Listener {
 	}
 	
 	public void openGUIShop(Player player) {
-		Inventory Shop = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Artifact Shop"));
+		Inventory Shop = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "Artifact Shop"));
 		
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "Drop loot in then close!");
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Drop loot in then close!"));
 		InfoMeta.setLore(Infolore);
 		
-		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 		Info.setItemMeta(InfoMeta);
 		Shop.setItem(50, Info);
 		
 		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
-	    Backlore.add(ChatColor.GRAY + "Click to go back!");
+	    Backlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click to go back!"));
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back" + "&8:"));
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Back" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 	    Back.setItemMeta(BackMeta);
 	    Shop.setItem(48, Back);
 	    
@@ -47,17 +47,17 @@ public class ArtifactShop implements Listener {
 	    ItemMeta PricesMeta = Prices.getItemMeta();
 	    ArrayList<String> Priceslore = new ArrayList();
 	    Priceslore.add(" ");
-	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Common" + "&8: &7" + this.plugin.getConfig().getDouble("ArtifactPrice.Common")));
-	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Rare" + "&8: &7" + this.plugin.getConfig().getDouble("ArtifactPrice.Rare")));
-	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Legendary" +  "&8: &7" + this.plugin.getConfig().getDouble("ArtifactPrice.Legendary")));
-	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Mythic" + "&8: &7" + this.plugin.getConfig().getDouble("ArtifactPrice.Mythic")));
-	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "HellStone" + "&8: &7" + this.plugin.getConfig().getDouble("ArtifactPrice.HellStone")));
+	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Common" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + this.plugin.getConfig().getDouble("ArtifactPrice.Common")));
+	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Rare" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + this.plugin.getConfig().getDouble("ArtifactPrice.Rare")));
+	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Legendary" +  this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + this.plugin.getConfig().getDouble("ArtifactPrice.Legendary")));
+	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Mythic" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + this.plugin.getConfig().getDouble("ArtifactPrice.Mythic")));
+	    Priceslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "HellStone" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") +this.plugin.getConfig().getDouble("ArtifactPrice.HellStone")));
 	    PricesMeta.setLore(Priceslore);
-	    PricesMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Prices" + "&8:"));
+	    PricesMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Prices" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 	    Prices.setItemMeta(PricesMeta);
 	    Shop.setItem(4, Prices);
 	    
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -85,32 +85,4 @@ public class ArtifactShop implements Listener {
 	    
 	    player.openInventory(Shop);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

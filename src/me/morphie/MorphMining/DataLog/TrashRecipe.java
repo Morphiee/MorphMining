@@ -22,28 +22,28 @@ public class TrashRecipe implements Listener {
 	}
 
 	public void openGUITR(Player player) {
-		Inventory TR = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Trashcan Recipe"));
+		Inventory TR = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "Trashcan Recipe"));
 		
 		ItemStack item = new ItemStack(Material.CAULDRON, 1);
 		ItemMeta im = item.getItemMeta();
 		ArrayList<String> itemlore = new ArrayList();
 		itemlore.add(" ");
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + TextColor() + "Dump all unwanted things here!"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Dump all unwanted things here!"));
 		itemlore.add(" ");
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "➛ " + this.TextColor() + "Level&8: [" + this.HighlightColor() + "●" + this.TextColor() + "●●&8]"));
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "➛ " + this.TextColor() + "Nullifier&8: " + this.HighlightColor() + "Disabled"));
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "➛ " + this.TextColor() + "Right-Click to use."));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Level" + this.plugin.getMessage("Menus.SpacerColor") + ": [" + this.plugin.getMessage("Menus.HighlightColor") + "●" + this.plugin.getMessage("Menus.LoreColor") + "●●" + this.plugin.getMessage("Menus.SpacerColor") + "]"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Nullifier" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.HighlightColor") + "Disabled"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Right-Click to use."));
 		itemlore.add(" ");
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
-		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "TrashCan"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
+		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "TrashCan"));
 		im.setLore(itemlore);
 		item.setItemMeta(im);
 		TR.setItem(20, item);
 		
 		ItemStack Iron = new ItemStack(Material.IRON_INGOT);
 		ItemMeta IronMeta = Iron.getItemMeta();
-		IronMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Iron Ingot"));
+		IronMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Iron Ingot"));
 		Iron.setItemMeta(IronMeta);
 		TR.setItem(14, Iron);
 		TR.setItem(16, Iron);
@@ -55,36 +55,36 @@ public class TrashRecipe implements Listener {
 		
 		ItemStack Caul = new ItemStack(Material.CAULDRON);
 		ItemMeta CaulMeta = Caul.getItemMeta();
-		CaulMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Cauldron"));
+		CaulMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Cauldron"));
 		Caul.setItemMeta(CaulMeta);
 		TR.setItem(15, Caul);
 		
 		ItemStack Lava = new ItemStack(Material.LAVA_BUCKET);
 		ItemMeta LavaMeta = Lava.getItemMeta();
-		LavaMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Lava Bucket"));
+		LavaMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Lava Bucket"));
 		Lava.setItemMeta(LavaMeta);
 		TR.setItem(24, Lava);
 		
 		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
-	    Backlore.add(ChatColor.GRAY + "Click to go back!");
+	    Backlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click to go back!"));
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back&8:"));
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Back&" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 	    Back.setItemMeta(BackMeta);
 	    TR.setItem(48, Back);
 	    
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "The above is the recipe for");
-		Infolore.add(ChatColor.GRAY + "the Trashcan. (Item on the left.)");
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "The above is the recipe for"));
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "the Trashcan. (Item on the left.)"));
 		InfoMeta.setLore(Infolore);
-		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 		Info.setItemMeta(InfoMeta);
 		TR.setItem(50, Info);
 		
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -113,32 +113,4 @@ public class TrashRecipe implements Listener {
 	    
 	    player.openInventory(TR);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

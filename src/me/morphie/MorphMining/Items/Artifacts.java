@@ -3,6 +3,7 @@ package me.morphie.MorphMining.Items;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,13 +32,13 @@ public class Artifacts implements Listener {
     
 	public void getArts(String s, Integer i, Player p) {
 		
-		ItemStack Art = new ItemStack(Material.GOLD_NUGGET, i);
+		ItemStack Art = new ItemStack(Material.matchMaterial(this.plugin.getConfig().getString("Settings.ArtifactItem")), i);
 		ItemMeta ArtMeta = Art.getItemMeta();
 		ArtMeta.addEnchant(Enchantment.DURABILITY, 1, true);
 		ArtMeta.addItemFlags(new ItemFlag[] { ItemFlag.HIDE_ENCHANTS });
 		ArrayList<String> ArtLore = new ArrayList();
 		
-		ItemStack HellStone = new ItemStack(Material.FIREWORK_STAR, i);
+		ItemStack HellStone = new ItemStack(Material.matchMaterial(this.plugin.getConfig().getString("Settings.HellstoneItem")), i);
 		ItemMeta HellStoneMeta = HellStone.getItemMeta();
 		HellStoneMeta.addEnchant(Enchantment.DURABILITY, 1, true);
 		HellStoneMeta.addItemFlags(new ItemFlag[] { ItemFlag.HIDE_ENCHANTS });
@@ -45,142 +46,114 @@ public class Artifacts implements Listener {
 		
 		if (s.equals("CommonArt")) {
 			
-		      int Count = 0;
-		      while (plugin.getConfig().getString("Artifacts.Common." + Count + ".Name") != null) {
-		        Count++;
-		      }
+		      int Count = this.plugin.getArtifacts("Common");
+		      int an = 0;
 		      
-		      Random rand = new Random();
-		      int an = rand.nextInt(Count);
+		      if (Count > 0) {
+			      Random rand = new Random();
+			      an = rand.nextInt(Count); 
+		      }
 		         
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Artifacts.Common." + an + ".Name")));
 		      ArtLore.add(" ");
 		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Artifacts.Common." + an + ".Description")));
 		      ArtLore.add(" ");
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Common"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Ores &8» &7Coal"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Tier " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Common"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Ores " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Coal"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 	          ArtMeta.setLore(ArtLore);
 	          Art.setItemMeta(ArtMeta);
 		      dropArt(p.getWorld(), p.getLocation(), Art);
 		}
 		if (s.equals("RareArt")) {
 			  
-		      int Count = 0;
-		      while (this.plugin.getConfig().getString("Artifacts.Rare." + Count + ".Name") != null) {
-		        Count++;
-		      }
+			  int Count = this.plugin.getArtifacts("Rare");
+		      int an = 0;
 		      
-		      Random rand = new Random();
-		      int an = rand.nextInt(Count);
+		      if (Count > 0) {
+			      Random rand = new Random();
+			      an = rand.nextInt(Count); 
+		      }
 		      
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Rare." + an + ".Name")));
 		      ArtLore.add(" ");
 		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Rare." + an + ".Description")));
 		      ArtLore.add(" ");
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Rare"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Ores &8» &7Redstone"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Tier " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Rare"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Ores " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Redstone"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 	          ArtMeta.setLore(ArtLore);
 	          Art.setItemMeta(ArtMeta);
 		      dropArt(p.getWorld(), p.getLocation(), Art);
 		}
 		if (s.equals("LegendaryArt")) {
 			  
-		      int Count = 0;
-		      while (this.plugin.getConfig().getString("Artifacts.Legendary." + Count + ".Name") != null) {
-		        Count++;
-		      }
+			  int Count = this.plugin.getArtifacts("Legendary");
+		      int an = 0;
 		      
-		      Random rand = new Random();
-		      int an = rand.nextInt(Count);
+		      if (Count > 0) {
+			      Random rand = new Random();
+			      an = rand.nextInt(Count); 
+		      }
 		      
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Legendary." + an+ ".Name")));
 		      ArtLore.add(" ");
 		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Legendary." + an + ".Description")));
 		      ArtLore.add(" ");
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Legendary"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Ores &8» &7Lapis"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Tier " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Legendary"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Ores " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Lapis"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 	          ArtMeta.setLore(ArtLore);
 	          Art.setItemMeta(ArtMeta);
 		      dropArt(p.getWorld(), p.getLocation(), Art);
 		}
 		if (s.equals("MythicArt")) {
 			  
-		      int Count = 0;
-		      while (this.plugin.getConfig().getString("Artifacts.Mythic." + Count + ".Name") != null) {
-		        Count++;
-		      }
+			  int Count = this.plugin.getArtifacts("Mythic");
+		      int an = 0;
 		      
-		      Random rand = new Random();
-		      int an = rand.nextInt(Count);
+		      if (Count > 0) {
+			      Random rand = new Random();
+			      an = rand.nextInt(Count); 
+		      }
 		      
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Mythic." + an + ".Name")));
 		      ArtLore.add(" ");
 		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Mythic." + an + ".Description")));
 		      ArtLore.add(" ");
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7Mythic"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Ores &8» &7Emerald, Diamond"));
-		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Tier " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Mythic"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Ores " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Diamond, Emerald"));
+		      ArtLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 	          ArtMeta.setLore(ArtLore);
 	          Art.setItemMeta(ArtMeta);
 		      dropArt(p.getWorld(), p.getLocation(), Art);
 		}
 		if (s.equals("HellStone")) {
 			  
-		      int Count = 0;
-		      while (this.plugin.getConfig().getString("Artifacts.HellStone." + Count + ".Name") != null) {
-		        Count++;
-		      }
+			  int Count = this.plugin.getArtifacts("HellStone");
+		      int an = 0;
 		      
-		      Random rand = new Random();
-		      int an = rand.nextInt(Count);
+		      if (Count > 0) {
+			      Random rand = new Random();
+			      an = rand.nextInt(Count); 
+		      }
 		      
 		      HellStoneMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.HellStone." + an + ".Name")));
 		      HellStoneLore.add(" ");
 		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.HellStone." + an + ".Description")));
 		      HellStoneLore.add(" ");
-		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Tier &8» &7HellStone"));
-		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Ores &8» &7Nether Quartz"));
-		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
+		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Tier " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "HellStone"));
+		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Ores " + this.plugin.getMessage("Menus.SpacerColor") + "» " + this.plugin.getMessage("Menus.LoreColor") + "Nether Quartz"));
+		      HellStoneLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 		      HellStoneMeta.setLore(HellStoneLore);
 		      HellStone.setItemMeta(HellStoneMeta);
 		      dropArt(p.getWorld(), p.getLocation(), HellStone);
 		}
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }
 

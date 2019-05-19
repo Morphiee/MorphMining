@@ -47,12 +47,13 @@ public class OverworldMining implements Listener {
         if (event.getItem() == null) {
           return;
         }
-        if (((event.getAction().equals(Action.RIGHT_CLICK_AIR)) || (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) && (event.getItem().getType().equals(Material.GOLD_NUGGET)) || (event.getItem().getType().equals(Material.FIREWORK_STAR)) && (event.getItem().hasItemMeta())) {
+        if (((event.getAction().equals(Action.RIGHT_CLICK_AIR)) || (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) && (event.getItem().getType().equals(Material.matchMaterial(this.plugin.getConfig().getString("Settings.ArtifactItem")))) || (event.getItem().getType().equals(Material.matchMaterial(this.plugin.getConfig().getString("Settings.HellstoneItem")))) && (event.getItem().hasItemMeta())) {
             ItemStack item2 = event.getItem();
             if (item2.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Mythic Artifact") || item2.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "" + ChatColor.BOLD + "Legendary Artifact") || item2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "" + ChatColor.BOLD + "Rare Artifact") || item2.getItemMeta().getDisplayName().equals(ChatColor.GRAY + "" + ChatColor.BOLD + "Common Artifact")) {
             	new ArtifactShop(this.plugin).openGUIShop(player);
-            } else if (item2.getItemMeta().getLore().contains(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"))) {
+            } else if (ChatColor.stripColor(item2.getItemMeta().getLore().get(6)).equals("MorphMining")) {
             	new ArtifactShop(this.plugin).openGUIShop(player);
+            	event.setCancelled(true);
             }
         }
     }
@@ -69,7 +70,7 @@ public class OverworldMining implements Listener {
 				new playerFileMethods(this.plugin).setData(p, uuid, "Stats.StoneMined", 1);
 			} else if (b.getType() == Material.COAL_ORE) {
 				new playerFileMethods(this.plugin).setData(p, uuid, "Stats.CoalOreMined", 1);
-			} else if (b.getType() == Material.LEGACY_GLOWING_REDSTONE_ORE) {
+			} else if (b.getType() == Material.REDSTONE_ORE) {
 				new playerFileMethods(this.plugin).setData(p, uuid, "Stats.RedstoneOreMined", 1);
 			} else if (b.getType() == Material.IRON_ORE) {
 				new playerFileMethods(this.plugin).setData(p, uuid, "Stats.IronOreMined", 1);
@@ -108,29 +109,29 @@ public class OverworldMining implements Listener {
 										new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Mythic", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedMythic", 1);
-										ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Mythic Artifact!", p);
+										ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Mythic Artifact!"), p);
 									} else {
 										new Artifacts(this.plugin).getArts("MythicArt", 1, p);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedMythic", 1);
-										ActionBar(HighlightColor() + "(Pouch Full!) +1 " + MainColor() + "Mythic Artifact!", p);
+										ActionBar(this.plugin.getMessage("Pouch.ActionFullMessage").replace("ARTIFACT", "Mythic Artifact!"), p);
 									}
 								} else if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Mythic") < this.plugin.getConfig().getInt("Pouches.Mythic.StartCapacity")) {
 										new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Mythic", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedMythic", 1);
-										ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Mythic Artifact!", p);
+										ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Mythic Artifact!"), p);
 								} else {
 									new Artifacts(this.plugin).getArts("MythicArt", 1, p);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedMythic", 1);
-									ActionBar(HighlightColor() + "(Pouch Full!) +1 " + MainColor() + "Mythic Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionFullMessage").replace("ARTIFACT", "Mythic Artifact!"), p);
 								}
 							} else {
 								new Artifacts(this.plugin).getArts("MythicArt", 1, p);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedMythic", 1);
-								ActionBar(HighlightColor() + "+1 " + MainColor() + "Mythic Artifact!", p);
+								ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Mythic Artifact!"), p);
 							}
 						}
 					}
@@ -145,29 +146,29 @@ public class OverworldMining implements Listener {
 										new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Legendary", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedLegendary", 1);
-										ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Legendary Artifact!", p);
+										ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Legendary Artifact!"), p);
 									} else {
 										new Artifacts(this.plugin).getArts("LegendaryArt", 1, p);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedLegendary", 1);
-										ActionBar(HighlightColor() + "+1 " + MainColor() + "Legendary Artifact!", p);
+										ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Legendary Artifact!"), p);
 									}
 								} else if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Legendary") < this.plugin.getConfig().getInt("Pouches.Legendary.StartCapacity")) {
 									new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Legendary", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedLegendary", 1);
-									ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Legendary Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Legendary Artifact!"), p);
 								} else {
 									new Artifacts(this.plugin).getArts("LegendaryArt", 1, p);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedLegendary", 1);
-									ActionBar(HighlightColor() + "(Pouch Full!) +1 " + MainColor() + "Legendary Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionFullMessage").replace("ARTIFACT", "Legendary Artifact!"), p);
 								}
 							} else {
 								new Artifacts(this.plugin).getArts("LegendaryArt", 1, p);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedLegendary", 1);
-							    ActionBar(HighlightColor() + "+1 " + MainColor() + "Legendary Artifact!", p);
+							    ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Legendary Artifact!"), p);
 							}
 						}
 					}
@@ -182,29 +183,29 @@ public class OverworldMining implements Listener {
 										new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Rare", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedRare", 1);
-										ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Rare Artifact!", p);
+										ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Rare Artifact!"), p);
 									} else {
 										new Artifacts(this.plugin).getArts("RareArt", 1, p);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedRare", 1);
-										ActionBar(HighlightColor() + "+1 " + MainColor() + "Rare Artifact!", p);
+										ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Rare Artifact!"), p);
 									}
 								} else if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Rare") < this.plugin.getConfig().getInt("Pouches.Rare.StartCapacity")) {
 									new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Rare", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedRare", 1);
-									ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Rare Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Rare Artifact!"), p);
 								} else {
 									new Artifacts(this.plugin).getArts("RareArt", 1, p);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedRare", 1);
-									ActionBar(HighlightColor() + "(Pouch Full!) +1 " + MainColor() + "Rare Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionFullMessage").replace("ARTIFACT", "Rare Artifact!"), p);
 								}
 							} else {
 								new Artifacts(this.plugin).getArts("RareArt", 1, p);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedRare", 1);
-							    ActionBar(HighlightColor() + "+1 " + MainColor() + "Rare Artifact!", p);
+							    ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Rare Artifact!"), p);
 							}
 						}
 					}
@@ -219,29 +220,29 @@ public class OverworldMining implements Listener {
 										new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Common", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedCommon", 1);
-										ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Common Artifact!", p);
+										ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Common Artifact!"), p);
 									} else {
 										new Artifacts(this.plugin).getArts("CommonArt", 1, p);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 										new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedCommon", 1);
-										ActionBar(HighlightColor() + "+1 " + MainColor() + "Common Artifact!", p);
+										ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Common Artifact!"), p);
 									}
 								} else if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Common") < this.plugin.getConfig().getInt("Pouches.Common.StartCapacity")) {
 									new playerFileMethods(this.plugin).setData(p, uuid, "Pouch.Common", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedCommon", 1);
-									ActionBar(HighlightColor() + "(Pouch) +1 " + MainColor() + "Common Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionMessage").replace("ARTIFACT", "Common Artifact!"), p);
 								} else {
 									new Artifacts(this.plugin).getArts("CommonArt", 1, p);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 									new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedCommon", 1);
-									ActionBar(HighlightColor() + "(Pouch Full!) +1 " + MainColor() + "Common Artifact!", p);
+									ActionBar(this.plugin.getMessage("Pouch.ActionFullMessage").replace("ARTIFACT", "Common Artifact!"), p);
 								}
 							} else {
 								new Artifacts(this.plugin).getArts("CommonArt", 1, p);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 								new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedCommon", 1);
-							    ActionBar(HighlightColor() + "+1 " + MainColor() + "Common Artifact!", p);
+							    ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Common Artifact!"), p);
 							}
 						}
 					}
@@ -256,7 +257,7 @@ public class OverworldMining implements Listener {
 	        ItemStack itm = inv.getItem(n);
 	        if(itm != null){
 	            if(itm.getType().equals(Material.FLOWER_POT)){
-	            	if(itm.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Miner's Pouch"))) {
+	            	if(itm.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Miner's Pouch"))) {
 	            		return true;
 	            	}
 	            }
@@ -264,32 +265,4 @@ public class OverworldMining implements Listener {
 	    }
 		return false;
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

@@ -23,28 +23,28 @@ public class DatalogRecipe implements Listener {
 	}
 
 	public void openGUIDR(Player player) {
-		Inventory DR = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "DataLog Recipe"));
+		Inventory DR = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "DataLog Recipe"));
 		
 		ItemStack DataLog = new ItemStack(Material.BOOK, 1);
 		ItemMeta DataMeta = DataLog.getItemMeta();
 		ArrayList<String> Datalore = new ArrayList();
 		Datalore.add(" ");
-		Datalore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + TextColor() + "The infinite wisdom of MorphMining"));
+		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "The infinite wisdom of MorphMining"));
 		Datalore.add(" ");
-		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		Datalore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "➛ " + this.TextColor() + "Version&8: " + TextColor() + new Station(plugin).Version));
-		Datalore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "➛ " + this.TextColor() + "Author&8:" + TextColor() + " Morphie"));
-		Datalore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "➛ " + this.TextColor() + "Right-Click to use."));
+		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Version" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + new Station(plugin).Version));
+		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Author" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + "Morphie"));
+		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Right-Click to use."));
 		Datalore.add(" ");
-		Datalore.add(ChatColor.translateAlternateColorCodes('&', MainColor() + "MorphMining"));
+		Datalore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 		DataMeta.setLore(Datalore);
-		DataMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', ItemColor() + "MorphMining DataLog"));
+		DataMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining DataLog"));
 		DataLog.setItemMeta(DataMeta);
 		DR.setItem(20, DataLog);
 		
 		ItemStack Leather = new ItemStack(Material.LEATHER);
 		ItemMeta LeatherMeta = Leather.getItemMeta();
-		LeatherMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Leather"));
+		LeatherMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Leather"));
 		Leather.setItemMeta(LeatherMeta);
 		DR.setItem(14, Leather);
 		DR.setItem(15, Leather);
@@ -57,30 +57,30 @@ public class DatalogRecipe implements Listener {
 		
 		ItemStack Book = new ItemStack(Material.BOOK);
 		ItemMeta BookMeta = Leather.getItemMeta();
-		BookMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Book"));
+		BookMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Book"));
 		Book.setItemMeta(BookMeta);
 		DR.setItem(24, Book);
 		
 		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
-	    Backlore.add(ChatColor.GRAY + "Click to go back!");
+	    Backlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click to go back!"));
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back&8:"));
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Back" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 	    Back.setItemMeta(BackMeta);
 	    DR.setItem(48, Back);
 	    
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "The above is the recipe for");
-		Infolore.add(ChatColor.GRAY + "the Datalog. (Item on the left.)");
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "The above is the recipe for"));
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "the Datalog. (Item on the left.)"));
 		InfoMeta.setLore(Infolore);
-		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 		Info.setItemMeta(InfoMeta);
 		DR.setItem(50, Info);
 		
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -109,32 +109,4 @@ public class DatalogRecipe implements Listener {
 	    
 	    player.openInventory(DR);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

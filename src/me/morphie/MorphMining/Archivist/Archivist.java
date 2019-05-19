@@ -19,15 +19,11 @@ import me.morphie.MorphMining.Station;
 
 public class Archivist implements Listener {
 	
-	private Main plugin;
-	  
-	public Archivist(Main plugin) {
-		this.plugin = plugin;
-	}
+	private Main plugin = Main.getPlugin(Main.class);
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Archivist")) {
+		if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Archivist")) {
 		      Player player = (Player)event.getWhoClicked();
 		      event.setCancelled(true);
 		      if ((event.getCurrentItem() == null) || (!event.getCurrentItem().hasItemMeta())) {
@@ -73,73 +69,73 @@ public class Archivist implements Listener {
 	}
 	
 	public void openGUIArch(Player player) {
-		Inventory Arch = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Archivist"));
+		Inventory Arch = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "Archivist"));
 		
 		ItemStack Coming = new ItemStack(Material.STRUCTURE_VOID);
 		ItemMeta ComingMeta = Coming.getItemMeta();
-		ComingMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "Coming Soon!"));
+		ComingMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "Coming Soon!"));
 		Coming.setItemMeta(ComingMeta);
 
 		ItemStack Buy = new ItemStack(Material.ENDER_EYE);
 		ItemMeta BuyMeta = Buy.getItemMeta();
-		BuyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Analyzers"));
+		BuyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Analyzers"));
 		Buy.setItemMeta(BuyMeta);
 		
 		ItemStack Sell = new ItemStack(Material.REDSTONE_BLOCK);
 		ItemMeta SellMeta = Sell.getItemMeta();
-		SellMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Planned Updates"));
+		SellMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Planned Updates"));
 		Sell.setItemMeta(SellMeta);
 		
 		ItemStack Ore = new ItemStack(Material.DIAMOND_ORE);
 		ItemMeta OreMeta = Ore.getItemMeta();
 		ArrayList<String> Orelore = new ArrayList();
-		Orelore.add(ChatColor.GRAY + "Grind your ores for a");
-		Orelore.add(ChatColor.GRAY + "chance to get gems!");
+		Orelore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Grind your ores for a"));
+		Orelore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "chance to get gems!"));
 		OreMeta.setLore(Orelore);
-		OreMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Ore Grinder"));
+		OreMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Ore Grinder"));
 		Ore.setItemMeta(OreMeta);
 	    
 	    ItemStack Art = new ItemStack(Material.END_CRYSTAL);
 	    ItemMeta ArtMeta = Art.getItemMeta();
 	    ArrayList<String> Artlore = new ArrayList();
-	    Artlore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    Artlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing soon!"));
 	    ArtMeta.setLore(Artlore);
-	    ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Relic Analyzer"));
+	    ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Relic Analyzer"));
 	    Art.setItemMeta(ArtMeta);
 	    
 	    ItemStack Fos = new ItemStack(Material.BONE);
 	    ItemMeta FosMeta = Fos.getItemMeta();
 	    ArrayList<String> Foslore = new ArrayList();
-	    Foslore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    Foslore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing soon!"));
 	    FosMeta.setLore(Foslore);
-	    FosMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Fossil Analyzer"));
+	    FosMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Fossil Analyzer"));
 	    Fos.setItemMeta(FosMeta);
 	    
 	    ItemStack Forge = new ItemStack(Material.ANVIL);
 	    ItemMeta ForgeMeta = Forge.getItemMeta();
 	    ArrayList<String> Forgelore = new ArrayList();
-	    Forgelore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "&oComing soon!"));
+	    Forgelore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing soon!"));
 	    ForgeMeta.setLore(Forgelore);
-	    ForgeMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Miner's Forge"));
+	    ForgeMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Miner's Forge"));
 	    Forge.setItemMeta(ForgeMeta);
 	    
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "Click on a shop to view more!");
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click on a shop to view more!"));
 		InfoMeta.setLore(Infolore);
-		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 		Info.setItemMeta(InfoMeta);
 		
 		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
-	    Backlore.add(ChatColor.GRAY + "Click to go back!");
+	    Backlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click to go back!"));
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back" + "&8:"));
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Back" + this.plugin.getMessage("Menus.SpacerColor") + "&8:"));
 	    Back.setItemMeta(BackMeta);
 	    
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -183,32 +179,4 @@ public class Archivist implements Listener {
 	    Arch.setItem(50, Info);
 	    player.openInventory(Arch);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

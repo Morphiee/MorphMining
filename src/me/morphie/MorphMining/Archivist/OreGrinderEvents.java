@@ -16,10 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Station;
-import me.morphie.MorphMining.DataLog.DatalogRecipe;
 import me.morphie.MorphMining.DataLog.LogArtsMenu;
-import me.morphie.MorphMining.DataLog.PouchRecipe;
-import me.morphie.MorphMining.DataLog.TrashRecipe;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import me.morphie.MorphMining.Market.Market;
 import net.md_5.bungee.api.ChatColor;
@@ -39,7 +36,7 @@ public class OreGrinderEvents implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
-		if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Ore Grinder")) {
+		if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Ore Grinder")) {
 			Player player = (Player)event.getWhoClicked();
 			if ((event.getCurrentItem() == null) || (!event.getCurrentItem().hasItemMeta())) {
 				return;
@@ -50,7 +47,7 @@ public class OreGrinderEvents implements Listener {
 				break;
 			case REDSTONE: 
 				player.closeInventory();
-				new Archivist(this.plugin).openGUIArch(player);
+				new Archivist().openGUIArch(player);
 				break;
 			case BOOK:
 				event.setCancelled(true);
@@ -64,7 +61,7 @@ public class OreGrinderEvents implements Listener {
 	
 	@EventHandler
 	public void onShopClose(InventoryCloseEvent event) {
-		if (ChatColor.stripColor(event.getInventory().getName()).equalsIgnoreCase("Ore Grinder")) {
+		if (ChatColor.stripColor(event.getView().getTitle()).equalsIgnoreCase("Ore Grinder")) {
 			Inventory inv = event.getInventory();
 			Player player = (Player)event.getPlayer();
 			UUID uuid = player.getUniqueId();
@@ -186,39 +183,11 @@ public class OreGrinderEvents implements Listener {
 				}
 	      	}
 	      	if ((Gems != 0) && (Ores != 0)) {
-	      		player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + ChatColor.GRAY + " You got " + HighlightColor() + "" + Gems + ChatColor.GRAY + " gems from " + HighlightColor() + Ores + ChatColor.GRAY + " ores!"));
+	      		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("OreGrinder.GemMessage").replace("GEMS", "" + Gems).replace("ORES", "" + Ores)));
 	      	}
 	      	if ((Gems == 0) && (Ores > 0)) {
-	      		player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + ChatColor.GRAY + " You were unlucky but got " + HighlightColor() + Min + TextColor() + " minerals from " + HighlightColor() + Ores + TextColor() + " &7ores!"));
+	      		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("OreGrinder.NoGemMessage").replace("ORES", "" + Ores)));
 	      	}
 	    }
 	 }
-	  
-	  public String Prefix() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-	  }
-	  
-	  public String GUIColor() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-	  }
-	  
-	  public String ItemColor() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-	  }
-	  
-	  public String MainColor() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-	  }
-	  
-	  public String TextColor() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-	  }
-	  
-	  public String HighlightColor() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-	  }
-	  
-	  public String ErrorPrefix() {
-	  	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-	  }
 }

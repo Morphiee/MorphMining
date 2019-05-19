@@ -50,39 +50,11 @@ public class NetherMining implements Listener {
 							new Artifacts(this.plugin).getArts("HellStone", 1, p);
 							new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedAll", 1);
 							new playerFileMethods(this.plugin).setData(p, uuid, "Stats.ArtifactsMinedHellstone", 1);
-							ActionBar(HighlightColor() + "+1 " + MainColor() + "HellStone!", p);
+							ActionBar(this.plugin.getMessage("ArtifactActionMessage").replace("ARTIFACT", "Hellstone!"), p);
 						}	
 					}
 				}
 			}
 		}
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

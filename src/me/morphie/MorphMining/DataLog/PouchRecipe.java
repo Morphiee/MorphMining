@@ -22,26 +22,26 @@ public class PouchRecipe implements Listener {
 	}
 
 	public void openGUIPR(Player player) {
-		Inventory PR = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.GUIColor() + "Pouch Recipe"));
+		Inventory PR = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.TitleColor") + "Pouch Recipe"));
 		
 		ItemStack item = new ItemStack(Material.FLOWER_POT, 1);
 		ItemMeta im = item.getItemMeta();
 		ArrayList<String> itemlore = new ArrayList();
 		itemlore.add(" ");
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', HighlightColor() + TextColor() + "Automatically stores your artifacts!"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Automatically stores your artifacts!"));
 		itemlore.add(" ");
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "Information&8:"));
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.HighlightColor() + "➛ " + this.TextColor() + "Right-Click to use."));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Right-Click to use."));
 		itemlore.add(" ");
-		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.MainColor() + "MorphMining"));
-		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', ItemColor() + "Miner's Pouch"));
+		itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
+		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Miner's Pouch"));
 		im.setLore(itemlore);
 		item.setItemMeta(im);
 		PR.setItem(20, item);
 		
 		ItemStack Leather = new ItemStack(Material.LEATHER);
 		ItemMeta LeatherMeta = Leather.getItemMeta();
-		LeatherMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Leather"));
+		LeatherMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Leather"));
 		Leather.setItemMeta(LeatherMeta);
 		PR.setItem(14, Leather);
 		PR.setItem(16, Leather);
@@ -53,36 +53,36 @@ public class PouchRecipe implements Listener {
 		
 		ItemStack Eye = new ItemStack(Material.ENDER_EYE);
 		ItemMeta EyeMeta = Eye.getItemMeta();
-		EyeMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Eye of Ender"));
+		EyeMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Eye of Ender"));
 		Eye.setItemMeta(EyeMeta);
 		PR.setItem(15, Eye);
 		
 		ItemStack Ender = new ItemStack(Material.ENDER_CHEST);
 		ItemMeta EnderMeta = Ender.getItemMeta();
-		EnderMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', MainColor() + "Ender Chest"));
+		EnderMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Ender Chest"));
 		Ender.setItemMeta(EnderMeta);
 		PR.setItem(24, Ender);
 		
 		ItemStack Back = new ItemStack(Material.REDSTONE);
 		ItemMeta BackMeta = Back.getItemMeta();
 		ArrayList<String> Backlore = new ArrayList();
-	    Backlore.add(ChatColor.GRAY + "Click to go back!");
+	    Backlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click to go back!"));
 	    BackMeta.setLore(Backlore);
-	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Back&8:"));
+	    BackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Back" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 	    Back.setItemMeta(BackMeta);
 	    PR.setItem(48, Back);
 	    
 		ItemStack Info = new ItemStack(Material.BOOK);
 		ItemMeta InfoMeta = Info.getItemMeta();
 		ArrayList<String> Infolore = new ArrayList();
-		Infolore.add(ChatColor.GRAY + "The above is the recipe for");
-		Infolore.add(ChatColor.GRAY + "the Pouch. (Item on the left.)");
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "The above is the recipe for"));
+		Infolore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "the Pouch. (Item on the left.)"));
 		InfoMeta.setLore(Infolore);
-		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.ItemColor() + "Information" + "&8:"));
+		InfoMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
 		Info.setItemMeta(InfoMeta);
 		PR.setItem(50, Info);
 		
-	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("MainGlassColor"));
+	    ItemStack bGlass = new ItemStack(Material.LEGACY_STAINED_GLASS_PANE, 1, (short) + this.plugin.getConfig().getInt("Settings.MainGlassColor"));
 	    ItemMeta bGlassMeta = bGlass.getItemMeta();
 	    ArrayList<String> bGlasslore = new ArrayList();
 	    bGlasslore.add(" ");
@@ -111,32 +111,4 @@ public class PouchRecipe implements Listener {
 	    
 	    player.openInventory(PR);
 	}
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

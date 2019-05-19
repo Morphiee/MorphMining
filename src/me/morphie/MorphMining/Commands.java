@@ -10,14 +10,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 import me.morphie.MorphMining.Archivist.OreGrinderMenu;
-import me.morphie.MorphMining.DataLog.LogBook;
 import me.morphie.MorphMining.DataLog.LogMenu;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import me.morphie.MorphMining.Items.Artifacts;
+import me.morphie.MorphMining.Items.Pouch;
 import me.morphie.MorphMining.Market.ArtifactShop;
 import me.morphie.MorphMining.Market.Market;
 import net.md_5.bungee.api.ChatColor;
@@ -34,20 +33,22 @@ public class Commands implements CommandExecutor {
 		if (cmd.getName().equalsIgnoreCase("mine")) {
 			if (args.length == 0) {
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]--------+" + ChatColor.RESET + ChatColor.DARK_GRAY + "[ " + MainColor() + "Morph Mining" + ChatColor.DARK_GRAY + " ]" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "+--------["));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Header")));
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine menu" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the miners station."));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine datalog" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the miners datalog."));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine gems" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To view how many gems you have."));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine og" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the ore grinder menu."));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine shop" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open the mining shop."));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine stats <player>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To open your stats menu."));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine withdraw <tier> <amount>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To withdraw artifacts from your pouch."));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Menu")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Datalog")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Gems")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.OreGrinder")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Shop")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Stats")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Recipe")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Withdraw")));
+				sender.sendMessage("");
 				if (sender.hasPermission("morphmining.admin") || sender.hasPermission("morphmining.reload")) {
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', HighlightColor() + "/mine reload" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + "To reload the plugins config files! (Perms Required)"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Reload")));
 				}
 				sender.sendMessage("");
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GRAY + "" + ChatColor.STRIKETHROUGH + "]-------------+" + ChatColor.RESET + ChatColor.DARK_GRAY + "[" + MainColor() + "!" + ChatColor.DARK_GRAY + "]" + ChatColor.DARK_GRAY + ChatColor.STRIKETHROUGH + "+-------------["));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Footer")));
 				sender.sendMessage("");
 				return true;
 			
@@ -77,10 +78,15 @@ public class Commands implements CommandExecutor {
 				new ArtifactShop(this.plugin).openGUIShop(player);
 				return true;
 			}
+			else if (args[0].equalsIgnoreCase("pouch")) {
+				Player player = (Player)sender;
+				new Pouch(this.plugin).openGUIPouch(player);
+				return true;
+			}
 			else if (args[0].equalsIgnoreCase("gems")) {
 				Player player = (Player)sender;
 				UUID uuid = player.getUniqueId();
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + TextColor() + " You currently have " + HighlightColor() + new playerFileMethods(this.plugin).getStat(uuid, "Stats.Gems") + TextColor() + " gems!"));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemMessage").replace("GEMS", "" + new playerFileMethods(this.plugin).getStat(uuid, "Stats.Gems"))));
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("withdraw")) {
@@ -93,19 +99,19 @@ public class Commands implements CommandExecutor {
 							if (parseInt > 0) {
 								if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Common") >= parseInt && parseInt > 0) {					
 									new Artifacts(this.plugin).getArts("CommonArt", parseInt, player);
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + TextColor() + " You have withdrawn " + HighlightColor() + "" + parseInt + TextColor() + " artifacts."));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("Pouch.WithdrawMessage").replace("ARTIFACTS", "" + parseInt)));
 									new playerFileMethods(this.plugin).setData(player, uuid, "Pouch.Common", -parseInt);
 									return true;
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You don't have enough artifacts in your pouch!"));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NoArtifacts")));
 									return true;
 								}
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You can only withdraw a positive number."));
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NegativeArtifacts")));
 								return true;
 							}
 						} else {
-							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Correct Usage: " + TextColor() + "/mine withdraw <tier> <amount>"));
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.CorrectUsage")));
 							return true;
 						}
 					} else if (args[1].equalsIgnoreCase("rare")) {
@@ -114,19 +120,19 @@ public class Commands implements CommandExecutor {
 							if (parseInt > 0) {
 								if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Rare") >= parseInt) {					
 									new Artifacts(this.plugin).getArts("RareArt", parseInt, player);
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + TextColor() + " You have withdrawn " + HighlightColor() + "" + parseInt + TextColor() + " artifacts."));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("Pouch.WithdrawMessage").replace("ARTIFACTS", "" + parseInt)));
 									new playerFileMethods(this.plugin).setData(player, uuid, "Pouch.Rare", -parseInt);
 									return true;
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You don't have enough artifacts in your pouch!"));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NoArtifacts")));
 									return true;
 								}
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You can only withdraw a positive number."));
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NegativeArtifacts")));
 								return true;
 							}
 						} else {
-							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Correct Usage: " + TextColor() + "/mine withdraw <tier> <amount>"));
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.CorrectUsage")));
 							return true;
 						}
 					} else if (args[1].equalsIgnoreCase("legendary")) {
@@ -135,19 +141,19 @@ public class Commands implements CommandExecutor {
 							if (parseInt > 0) {
 								if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Legendary") >= parseInt) {					
 									new Artifacts(this.plugin).getArts("LegendaryArt", parseInt, player);
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + TextColor() + " You have withdrawn " + HighlightColor() + "" + parseInt + TextColor() + " artifacts."));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("Pouch.WithdrawMessage").replace("ARTIFACTS", "" + parseInt)));
 									new playerFileMethods(this.plugin).setData(player, uuid, "Pouch.Legendary", -parseInt);
 									return true;
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You don't have enough artifacts in your pouch!"));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NoArtifacts")));
 									return true;
 								}
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You can only withdraw a positive number."));
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NegativeArtifacts")));
 								return true;
 							}
 						} else {
-							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Correct Usage: " + TextColor() + "/mine withdraw <tier> <amount>"));
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.CorrectUsage")));
 							return true;
 						}
 					} else if (args[1].equalsIgnoreCase("mythic")) {
@@ -156,31 +162,30 @@ public class Commands implements CommandExecutor {
 							if (parseInt > 0) {
 								if (new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Mythic") >= parseInt && parseInt > 0) {					
 									new Artifacts(this.plugin).getArts("MythicArt", parseInt, player);
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + TextColor() + " You have withdrawn " + HighlightColor() + "" + parseInt + TextColor() + " artifacts."));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("Pouch.WithdrawMessage").replace("ARTIFACTS", "" + parseInt)));
 									new playerFileMethods(this.plugin).setData(player, uuid, "Pouch.Mythic", -parseInt);
 									return true;
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You don't have enough artifacts in your pouch!"));
+									player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NoArtifacts")));
 									return true;
 								}
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You can only withdraw a positive number."));
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.NegativeArtifacts")));
 								return true;
 							}
 						} else {
-							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Correct Usage: " + TextColor() + "/mine withdraw <tier> <amount>"));
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.CorrectUsage")));
 							return true;
 						}
 					} else {
-						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Correct Usage: " + TextColor() + "/mine withdraw <tier> <amount>"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.CorrectUsage")));
 						return true;
 					}
 				} else {
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Correct Usage: " + TextColor() + "/mine withdraw <tier> <amount>"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.CorrectUsage")));
 					return true;
 				}
-			}
-			else if (args[0].equalsIgnoreCase("stats")) {
+			} else if (args[0].equalsIgnoreCase("stats")) {
 				if ((sender instanceof Player)) {
 					Player player = (Player)sender;
 					if (args.length == 2) {
@@ -190,7 +195,7 @@ public class Commands implements CommandExecutor {
 								new MineStats(this.plugin).openGUIStats(player, uuid, args[1]);
 								return true;
 							} else {
-								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " This player doesn't have any mining stats!"));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Stats.NoStatsMessage")));
 								return true;
 							}
 						} else {
@@ -199,7 +204,7 @@ public class Commands implements CommandExecutor {
 								new MineStats(this.plugin).openGUIStats(player, uuid, args[1]);
 								return true;
 							} else {
-								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " This player doesn't have any mining stats!"));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Stats.NoStatsMessage")));
 								return true;
 							}
 						}
@@ -208,23 +213,71 @@ public class Commands implements CommandExecutor {
 						return true;
 					}
 				}
-			}
-			else if (args[0].equalsIgnoreCase("reload")) {
+			} else if (args[0].equalsIgnoreCase("reload")) {
 				if (sender.hasPermission("morphmining.admin") || sender.hasPermission("morphmining.reload")) {
 					Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("MorphMining");
-		            if (plugin != null) {
+		            if (this.plugin != null) {
 		            	this.plugin.reloadConfig();
-		            	plugin.getServer().getPluginManager().disablePlugin(plugin);
-		            	plugin.getServer().getPluginManager().enablePlugin(plugin);
-		            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Prefix() + ChatColor.GRAY + " Plugin has been successfully reloaded!"));
+		            	this.plugin.getServer().getPluginManager().disablePlugin(plugin);
+		            	this.plugin.getServer().getPluginManager().enablePlugin(plugin);
+		            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("ReloadMessage")));
 		            	return true;
 		            }
 				} else {
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " You don't have permission to do this!"));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("NoPermsMessage")));
+					return true;
+		        }
+			} else if (args[0].equalsIgnoreCase("recipe")) {
+				if (args.length > 1) {
+					if (args[1].equalsIgnoreCase("DL")) {
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Crafting Grid" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Datalog.Line1") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 1"));    
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Datalog.Line2") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 2")); 
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Datalog.Line3") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 3")); 
+						sender.sendMessage(" ");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Ingredients" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + "(Key | Item)"));
+					    int Count = 0;
+					    while (plugin.getConfig().getString("Recipes.Datalog.Ingredients." + Count) != null) {
+					    	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.SpacerColor") + "  [" + this.plugin.getMessage("Menus.HighlightColor") + plugin.getConfig().getString("Recipes.Datalog.Ingredients." + Count + ".Key") + this.plugin.getMessage("Menus.SpacerColor") + "] " + this.plugin.getMessage("Menus.LoreColor") + plugin.getConfig().getString("Recipes.Datalog.Ingredients." + Count + ".Material")));
+					    	Count++;
+					    }
+						return true;
+					} else if (args[1].equalsIgnoreCase("P")) {
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Crafting Grid" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Pouch.Line1") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 1"));    
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Pouch.Line2") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 2")); 
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Pouch.Line3") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 3")); 
+						sender.sendMessage(" ");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Ingredients" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + "(Key | Item)"));
+					    int Count = 0;
+					    while (plugin.getConfig().getString("Recipes.Pouch.Ingredients." + Count) != null) {
+					    	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.SpacerColor") + "  [" + this.plugin.getMessage("Menus.HighlightColor") + plugin.getConfig().getString("Recipes.Pouch.Ingredients." + Count + ".Key") + this.plugin.getMessage("Menus.SpacerColor") + "] " + this.plugin.getMessage("Menus.LoreColor") + plugin.getConfig().getString("Recipes.Pouch.Ingredients." + Count + ".Material")));
+					    	Count++;
+					    }
+						return true;
+					} else if (args[1].equalsIgnoreCase("TC")) {
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Crafting Grid" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Trashcan.Line1") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 1"));    
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Trashcan.Line2") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 2")); 
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "  |" + this.plugin.getMessage("Menus.HighlightColor") + this.plugin.getConfig().getString("Recipes.Trashcan.Line3") + "&f|" + this.plugin.getMessage("Menus.SpacerColor") + " - " + this.plugin.getMessage("Menus.LoreColor") + "Line 3")); 
+						sender.sendMessage(" ");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Ingredients" + this.plugin.getMessage("Menus.SpacerColor") + ": " + this.plugin.getMessage("Menus.LoreColor") + "(Key | Item)"));
+					    int Count = 0;
+					    while (plugin.getConfig().getString("Recipes.Trashcan.Ingredients." + Count) != null) {
+					    	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.SpacerColor") + "  [" + this.plugin.getMessage("Menus.HighlightColor") + plugin.getConfig().getString("Recipes.Trashcan.Ingredients." + Count + ".Key") + this.plugin.getMessage("Menus.SpacerColor") + "] " + this.plugin.getMessage("Menus.LoreColor") + plugin.getConfig().getString("Recipes.Trashcan.Ingredients." + Count + ".Material")));
+					    	Count++;
+					    }
+						return true;
+					} else {
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("InvalidRecipe")));
+						return true;
+					}
+				} else {
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("InvalidRecipe")));
 					return true;
 		        }
 		   } else {
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ErrorPrefix() + HighlightColor() + " Invaild argument! Use /mine to view all commands."));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("InvalidArgsMessage")));
 				return true;
 		   }
 		}
@@ -239,32 +292,4 @@ public class Commands implements CommandExecutor {
 	    }
 	    return true;
 	  }
-	
-    public String Prefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.Prefix");
-    }
-    
-    public String GUIColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.GUIColor");
-    }
-    
-    public String ItemColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.ItemColor");
-    }
-    
-    public String MainColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.MainColor");
-    }
-    
-    public String TextColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.TextColor");
-    }
-    
-    public String HighlightColor() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.Misc.HighlightColor");
-    }
-    
-    public String ErrorPrefix() {
-    	return this.plugin.messagescfg.messagesCFG.getString("Messages.ErrorMessages.Prefix");
-    }
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import me.morphie.MorphMining.Main;
 
@@ -29,6 +30,12 @@ public class playerFileMethods {
 	    FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
 	    return fc.getBoolean(string);
    }
+  
+  public ItemStack getMaterial(UUID uuid, String string) {
+	    File file = getPlayerFile(uuid);
+	    FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
+	    return fc.getItemStack(string);
+ }
   
   public File getPlayerFile(UUID uuid) {
     File playerFile = new File(this.plugin.getDataFolder() + File.separator + "PlayerData", uuid + ".yml");
