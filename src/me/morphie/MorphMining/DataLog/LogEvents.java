@@ -6,10 +6,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Station;
 import me.morphie.MorphMining.DataLog.LogArtsMenu;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 
 public class LogEvents implements Listener {

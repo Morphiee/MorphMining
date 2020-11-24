@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class MineStats implements Listener {
 

@@ -13,12 +13,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import me.morphie.MorphMining.Items.Artifacts;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import me.morphie.MorphMining.Main;
 
 public class NetherMining implements Listener {
 	

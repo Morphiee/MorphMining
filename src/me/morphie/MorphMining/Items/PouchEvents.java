@@ -11,9 +11,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class PouchEvents implements Listener {
 	
@@ -124,6 +124,39 @@ public class PouchEvents implements Listener {
 					}
 				}
 				break;
+			case EMERALD:
+				event.setCancelled(true);
+				int gemCost = this.plugin.getConfig().getInt("Pouches.AutoSell.GemCost");
+				int pGems = new playerFileMethods(this.plugin).getStat(uuid, "Stats.Gems");
+				if (pGems >= gemCost) {
+					int commonArts = new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Common");
+					int rareArts = new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Rare");
+					int legendaryArts = new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Legendary");
+					int mythicArts = new playerFileMethods(this.plugin).getStat(uuid, "Pouch.Mythic");
+					if (commonArts > 0 || rareArts > 0 || legendaryArts > 0 || mythicArts > 0) {
+					    double CommonPrice = this.plugin.getConfig().getDouble("ArtifactPrice.Common");
+					    double RarePrice = this.plugin.getConfig().getDouble("ArtifactPrice.Rare");
+					    double LegendaryPrice = this.plugin.getConfig().getDouble("ArtifactPrice.Legendary");
+					    double MythicPrice = this.plugin.getConfig().getDouble("ArtifactPrice.Mythic");
+					    int addedArts = commonArts + rareArts + legendaryArts + mythicArts;
+						double allArts = (commonArts * CommonPrice) + (rareArts * RarePrice) + (legendaryArts * LegendaryPrice) + (mythicArts * MythicPrice);
+						Main.econ.depositPlayer(player, allArts);
+						new playerFileMethods(this.plugin).removeInt(player, uuid, "Stats.Gems", gemCost);
+						new playerFileMethods(this.plugin).setInt(player, uuid, "Pouch.Common", 0);
+						new playerFileMethods(this.plugin).setInt(player, uuid, "Pouch.Rare", 0);
+						new playerFileMethods(this.plugin).setInt(player, uuid, "Pouch.Legendary", 0);
+						new playerFileMethods(this.plugin).setInt(player, uuid, "Pouch.Mythic", 0);
+						new Pouch(this.plugin).openGUIPouch(player);
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("Pouch.AutoSell.Message").replace("MONEY", "" + allArts).replace("ARTIFACTS", "" + addedArts)));
+						break;
+					} else {
+						player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("Pouch.AutoSell.NoArtifacts")));
+						break;	
+					}
+				} else {
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("InvalidGems")));
+					break;
+				}
 			case RED_STAINED_GLASS_PANE:
 				new playerFileMethods(this.plugin).setBoolean(player, uuid, "Pouch.Enabled", true);
 				new Pouch(this.plugin).openGUIPouch(player);
@@ -142,9 +175,6 @@ public class PouchEvents implements Listener {
 				event.setCancelled(true);
 				break;
 			case DIAMOND:
-				event.setCancelled(true);
-				break;
-			case EMERALD:
 				event.setCancelled(true);
 				break;
 			case STRUCTURE_VOID:

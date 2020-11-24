@@ -65,10 +65,38 @@ public class playerFileMethods {
 	    }
 	}
 	
+	public void setInt(Player player, UUID uuid, String string, int i) {
+	    File file = getPlayerFile(player.getUniqueId());
+	    FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
+	    fc.set(string, Integer.valueOf(i));
+	    try
+	    {
+	      fc.save(file);
+	    }
+	    catch (IOException e)
+	    {
+	      e.printStackTrace();
+	    }
+	}
+	
 	public void addMoney(Player player, UUID uuid, String string, double i) {
 	    File file = getPlayerFile(player.getUniqueId());
 	    FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
 	    fc.set(string, Double.valueOf(fc.getDouble(string) + i));
+	    try
+	    {
+	      fc.save(file);
+	    }
+	    catch (IOException e)
+	    {
+	      e.printStackTrace();
+	    }
+	}
+	
+	public void addMaterial(Player player, UUID uuid, String string, ItemStack i) {
+	    File file = getPlayerFile(player.getUniqueId());
+	    FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
+	    fc.set(string, i);
 	    try
 	    {
 	      fc.save(file);

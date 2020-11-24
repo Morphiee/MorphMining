@@ -3,7 +3,6 @@ package me.morphie.MorphMining.Items;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
@@ -12,9 +11,9 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Station;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class CrafterItems implements Listener {
 	
@@ -33,9 +32,8 @@ public class CrafterItems implements Listener {
 			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Dump all unwanted things here!"));
 			itemlore.add(" ");
 			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Information" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
-			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Level" + this.plugin.getMessage("Menus.SpacerColor") + ": [" + this.plugin.getMessage("Menus.HighlightColor") + "●" + this.plugin.getMessage("Menus.LoreColor") + "●●" + this.plugin.getMessage("Menus.SpacerColor") +"]"));
-			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Nullifier" + this.plugin.getMessage("Menus.SpacerColor") +": " + this.plugin.getMessage("Menus.HighlightColor") + "Disabled"));
-			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Right-Click to use."));
+			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Right-Click to use Trasher."));
+			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + "Left-Click to use Nullifier"));
 			itemlore.add(" ");
 			itemlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "MorphMining"));
 			im.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "TrashCan"));

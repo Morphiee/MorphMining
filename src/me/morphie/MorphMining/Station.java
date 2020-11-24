@@ -1,24 +1,44 @@
 package me.morphie.MorphMining;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 
 import me.morphie.MorphMining.Archivist.Archivist;
 import me.morphie.MorphMining.DataLog.LogMenu;
 import me.morphie.MorphMining.Market.Market;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class Station implements Listener {
 
@@ -28,7 +48,7 @@ public class Station implements Listener {
 		this.plugin = plugin;
 	}
 	
-	public String Version = "1.5.1";
+	public String Version = "1.6.1";
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
@@ -132,9 +152,8 @@ public class Station implements Listener {
 	    spawnerMeta .setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Spawners"));
 	    spawner.setItemMeta(spawnerMeta );
 	    
-	    ItemStack craft = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
+	    ItemStack craft = getSkullFromPlayer(getFromName(player.getName()));
 	    SkullMeta craftMeta = (SkullMeta) craft.getItemMeta();
-	    craftMeta.setOwner(player.getName());
 	    ArrayList<String> craftlore = new ArrayList();
 	    craftlore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Your MorphMining stats!"));
 	    craftMeta .setLore(craftlore);
@@ -202,4 +221,42 @@ public class Station implements Listener {
 	    
 	    player.openInventory(Menu);
 	}
+	
+	private ItemStack getSkullFromPlayer(String texture) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta headMeta = (SkullMeta) head.getItemMeta();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", texture));
+
+        try {
+            Field profileField = headMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(headMeta, profile);
+        } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        head.setItemMeta(headMeta);
+        return head;
+    }
+	
+    public String getFromName(String name) {
+        try {
+            URL url_0 = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
+            InputStreamReader reader_0 = new InputStreamReader(url_0.openStream());
+            String uuid = new JsonParser().parse(reader_0).getAsJsonObject().get("id").getAsString();
+     
+            URL url_1 = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
+            InputStreamReader reader_1 = new InputStreamReader(url_1.openStream());
+            JsonObject textureProperty = new JsonParser().parse(reader_1).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
+            String texture = textureProperty.get("value").getAsString();
+            String signature = textureProperty.get("signature").getAsString();
+
+            return texture;
+        } catch (IOException e) {
+        	ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+            return head.toString();
+        }
+    }
 }

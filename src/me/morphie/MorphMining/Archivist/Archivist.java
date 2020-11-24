@@ -13,8 +13,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Station;
+import me.morphie.MorphMining.Main;
 
 
 public class Archivist implements Listener {

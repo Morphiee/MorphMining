@@ -8,7 +8,7 @@
 #
 #============================================================================================================================|
 #
-# Plugin Version: 1.5.1
+# Plugin Version: 1.6.1
 # Spigot Link: https://www.spigotmc.org/resources/morphmining.53827/
 # Author's Discord: Morphie#6969
 # 
@@ -54,6 +54,8 @@ OreGrinder:
 # Here you can change things about the pouch system. Pouches are a craftable item that allows the user to store artifacts.
 # Pouches have levels that unlock more capacity space at the cost of gems and your servers currency.
 Pouches:
+  AutoSell:
+    GemCost: 50
   Common:
     StartCapacity: 100
     UpgradedCapacity: 200
@@ -85,11 +87,11 @@ Trashcan:
     GemCost: 250
     CurrencyCost: 5000.00
   Slot3:
-    GemCost: 250
-    CurrencyCost: 5000.00
+    GemCost: 350
+    CurrencyCost: 7000.00
   Slot4:
-    GemCost: 250
-    CurrencyCost: 5000.00
+    GemCost: 700
+    CurrencyCost: 10000.00
     
 #============================================================================================================================|
     
@@ -144,13 +146,6 @@ Recipes:
       2:
         Key: "%"
         Material: "LAVA_BUCKET"
-        
-#============================================================================================================================|
-
-# SilkSpawners disable them or change the percentage at which they drop. (Requires silk touch!)
-SilkSpawners:
-  Enabled: false
-  Percentage: 100
       
 #============================================================================================================================|      
 

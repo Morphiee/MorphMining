@@ -15,16 +15,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import me.morphie.MorphMining.Items.Artifacts;
-import me.morphie.MorphMining.Items.Pouch;
 import me.morphie.MorphMining.Market.ArtifactShop;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import me.morphie.MorphMining.Main;
 
 public class OverworldMining implements Listener {
 	
@@ -51,7 +49,7 @@ public class OverworldMining implements Listener {
             ItemStack item2 = event.getItem();
             if (item2.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Mythic Artifact") || item2.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "" + ChatColor.BOLD + "Legendary Artifact") || item2.getItemMeta().getDisplayName().equals(ChatColor.AQUA + "" + ChatColor.BOLD + "Rare Artifact") || item2.getItemMeta().getDisplayName().equals(ChatColor.GRAY + "" + ChatColor.BOLD + "Common Artifact")) {
             	new ArtifactShop(this.plugin).openGUIShop(player);
-            } else if (ChatColor.stripColor(item2.getItemMeta().getLore().get(6)).equals("MorphMining")) {
+            } else if (item2.hasItemMeta() && ChatColor.stripColor(item2.getItemMeta().getLore().get(6)).equals("MorphMining")) {
             	new ArtifactShop(this.plugin).openGUIShop(player);
             	event.setCancelled(true);
             }

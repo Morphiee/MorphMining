@@ -11,8 +11,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Items.CrafterItems;
+import me.morphie.MorphMining.Main;
 
 public class LogBook implements Listener {
 

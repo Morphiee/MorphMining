@@ -6,20 +6,15 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.morphie.MorphMining.Main;
 import me.morphie.MorphMining.Files.playerFileMethods;
-import me.morphie.MorphMining.Market.ArtifactShop;
-import me.morphie.MorphMining.Market.Market;
+
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class Pouch implements Listener {
 	
@@ -197,7 +192,8 @@ public class Pouch implements Listener {
 	    sellLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "Click me to automatically sell"));
 	    sellLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.LoreColor") + "all artifacts in your pouch!"));
 	    sellLore.add(" ");
-	    sellLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "&oComing soon!"));
+	    sellLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Requirements" + this.plugin.getMessage("Menus.SpacerColor") + ":"));
+	    sellLore.add(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.HighlightColor") + "➛ " + this.plugin.getMessage("Menus.LoreColor") + this.plugin.getConfig().getInt("Pouches.AutoSell.GemCost") + " Gems"));
 	    sellMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Menus.ItemColor") + "Auto-Sell"));
 	    sellMeta.setLore(sellLore);
 	    sell.setItemMeta(sellMeta);

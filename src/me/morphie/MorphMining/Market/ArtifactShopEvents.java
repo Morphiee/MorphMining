@@ -1,6 +1,5 @@
 package me.morphie.MorphMining.Market;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -10,13 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import me.morphie.MorphMining.Main;
-import me.morphie.MorphMining.Station;
 import me.morphie.MorphMining.Files.playerFileMethods;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class ArtifactShopEvents implements Listener {
 	

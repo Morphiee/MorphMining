@@ -20,6 +20,7 @@ import me.morphie.MorphMining.Items.Pouch;
 import me.morphie.MorphMining.Market.ArtifactShop;
 import me.morphie.MorphMining.Market.Market;
 import net.md_5.bungee.api.ChatColor;
+import me.morphie.MorphMining.Main;
 
 public class Commands implements CommandExecutor {
 	
@@ -37,14 +38,16 @@ public class Commands implements CommandExecutor {
 				sender.sendMessage("");
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Menu")));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Datalog")));
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Gems")));
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Gems.Get")));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.OreGrinder")));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Shop")));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Stats")));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Recipe")));
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Withdraw")));
 				sender.sendMessage("");
-				if (sender.hasPermission("morphmining.admin") || sender.hasPermission("morphmining.reload")) {
+				if (sender.hasPermission("morphmining.admin") || sender.hasPermission("morphmining.reload") || sender.hasPermission("morphmining.addgems")) {
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Gems.Add")));
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Gems.Remove")));
 					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Commands.Reload")));
 				}
 				sender.sendMessage("");
@@ -86,8 +89,127 @@ public class Commands implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase("gems")) {
 				Player player = (Player)sender;
 				UUID uuid = player.getUniqueId();
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemMessage").replace("GEMS", "" + new playerFileMethods(this.plugin).getStat(uuid, "Stats.Gems"))));
-				return true;
+				if (args.length > 1 && args[1].equalsIgnoreCase("add")) {
+					if (sender.hasPermission("morphmining.admin") || sender.hasPermission("morphmining.addgems")) {
+						if (args.length != 4) {
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Add")));
+							return true;
+						}
+						int amount = Integer.parseInt(args[3]);
+				        if (Bukkit.getServer().getPlayer(args[2]) != null) {
+					        Player target = Bukkit.getServer().getPlayer(args[2]); 
+					        UUID targetUUID = target.getUniqueId();
+				        	try {
+				        		Integer.parseInt(args[3]);
+				            }
+				            catch (NumberFormatException e) {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Add")));
+				            	return true;
+				            }
+				            if (amount <= 0) {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Add")));
+				            	return true;
+				            }
+				            new playerFileMethods(this.plugin).setData(player, targetUUID, "Stats.Gems", amount);
+				            if (sender == target) {
+				            	target.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemAddMessage").replace("GEMS", "" + amount)));
+				            	return true;
+				            } else {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemAddSuccessMessage")));
+				            	target.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemAddMessage").replace("GEMS", "" + amount)));
+				            	return true;
+				            }
+				        } else {
+							UUID uuid2 = Bukkit.getServer().getOfflinePlayer(args[2]).getUniqueId();
+							if (getFileExists(uuid2)) {
+					        	try {
+					        		Integer.parseInt(args[3]);
+					            }
+					            catch (NumberFormatException e) {
+					            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Add")));
+					            	return true;
+					            }
+					            if (amount <= 0) {
+					            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Add")));
+					            	return true;
+					            }
+								new playerFileMethods(this.plugin).setData(player, uuid2, "Stats.Gems", amount);
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemAddSuccessMessage")));
+								return true;
+							} else {
+								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("InvalidPlayer")));
+								return true;
+							}
+				        }
+					}
+				} else if (args.length > 1 && args[1].equalsIgnoreCase("remove")) {
+					if (sender.hasPermission("morphmining.admin") || sender.hasPermission("morphmining.removegems")) {
+						if (args.length != 4) {
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+							return true;
+						}
+				        if (Bukkit.getServer().getPlayer(args[2]) != null) {
+					        Player target = Bukkit.getServer().getPlayer(args[2]); 
+					        UUID targetUUID = target.getUniqueId();
+							int amount = Integer.parseInt(args[3]);
+							int gems = new playerFileMethods(this.plugin).getStat(targetUUID, "Stats.Gems");
+				        	try {
+				        		Integer.parseInt(args[3]);
+				            }
+				            catch (NumberFormatException e) {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+				            	return true;
+				            }
+				            if (amount <= 0) {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+				            	return true;
+				            }
+				            if (amount > gems) {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+				            	return true; 
+				            }
+				            new playerFileMethods(this.plugin).removeInt(player, targetUUID, "Stats.Gems", amount);
+				            if (sender == target) {
+				            	target.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemRemoveMessage").replace("GEMS", "" + amount)));
+				            	return true;
+				            } else {
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemRemoveSuccessMessage")));
+				            	target.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemRemoveMessage").replace("GEMS", "" + amount)));
+				            	return true;
+				            } 
+				        } else {
+							UUID uuid2 = Bukkit.getServer().getOfflinePlayer(args[2]).getUniqueId();
+							int amount = Integer.parseInt(args[3]);
+							int gems = new playerFileMethods(this.plugin).getStat(uuid2, "Stats.Gems");
+							if (getFileExists(uuid2)) {
+					        	try {
+					        		Integer.parseInt(args[3]);
+					            }
+					            catch (NumberFormatException e) {
+					            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+					            	return true;
+					            }
+					            if (amount <= 0) {
+					            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+					            	return true;
+					            }
+					            if (amount < gems) {
+					            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("CorrectUsage.Remove")));
+					            	return true; 
+					            }
+								new playerFileMethods(this.plugin).setData(player, uuid2, "Stats.Gems", amount);
+				            	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemRemoveSuccessMessage")));
+								return true;
+							} else {
+								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("ErrorPrefix") + this.plugin.getMessage("InvalidPlayer")));
+								return true;
+							}
+				        }
+					}
+				} else {
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getMessage("Prefix") + this.plugin.getMessage("GemMessage").replace("GEMS", "" + new playerFileMethods(this.plugin).getStat(uuid, "Stats.Gems"))));
+					return true;
+				}
 			}
 			else if (args[0].equalsIgnoreCase("withdraw")) {
 				Player player = (Player)sender;

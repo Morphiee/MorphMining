@@ -3,7 +3,6 @@ package me.morphie.MorphMining.Items;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,7 +50,7 @@ public class Artifacts implements Listener {
 		      
 		      if (Count > 0) {
 			      Random rand = new Random();
-			      an = rand.nextInt(Count); 
+			      an = rand.nextInt(Count + 1); 
 		      }
 		         
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Artifacts.Common." + an + ".Name")));
@@ -73,7 +72,7 @@ public class Artifacts implements Listener {
 		      
 		      if (Count > 0) {
 			      Random rand = new Random();
-			      an = rand.nextInt(Count); 
+			      an = rand.nextInt(Count + 1); 
 		      }
 		      
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Rare." + an + ".Name")));
@@ -95,7 +94,7 @@ public class Artifacts implements Listener {
 		      
 		      if (Count > 0) {
 			      Random rand = new Random();
-			      an = rand.nextInt(Count); 
+			      an = rand.nextInt(Count + 1); 
 		      }
 		      
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Legendary." + an+ ".Name")));
@@ -117,7 +116,7 @@ public class Artifacts implements Listener {
 		      
 		      if (Count > 0) {
 			      Random rand = new Random();
-			      an = rand.nextInt(Count); 
+			      an = rand.nextInt(Count + 1); 
 		      }
 		      
 		      ArtMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.Mythic." + an + ".Name")));
@@ -139,7 +138,7 @@ public class Artifacts implements Listener {
 		      
 		      if (Count > 0) {
 			      Random rand = new Random();
-			      an = rand.nextInt(Count); 
+			      an = rand.nextInt(Count + 1); 
 		      }
 		      
 		      HellStoneMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("Artifacts.HellStone." + an + ".Name")));

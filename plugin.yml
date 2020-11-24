@@ -1,6 +1,6 @@
 name: MorphMining
 author: Morphie
-version: 1.5.1
+version: 1.6.1
 api-version: 1.13
 main: me.morphie.MorphMining.Main
 depend: [Vault]
