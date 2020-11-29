@@ -1,0 +1,14 @@
+name: MorphMining
+author: Morphie
+version: 1.6.2
+api-version: 1.13
+main: me.morphie.MorphMining.Main
+depend: [Vault]
+
+commands:
+   mine:
+      description: Shows the base commands for mining.
+      usage: /<command>
+   pouch:
+      description: Main command for the MorphMining pouch system.
+      usage: /<command>
